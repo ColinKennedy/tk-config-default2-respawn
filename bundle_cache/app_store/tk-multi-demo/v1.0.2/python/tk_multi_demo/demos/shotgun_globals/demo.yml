@@ -1,0 +1,22 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Shotgun Globals"
+
+description:
+  A demonstration of the shotgun_globals module found in the toolkit shotgun
+  utils framework. The methods in this module allow you to display select
+  portions of your site's Shotgun schema in a clean and consistent way.
+
+documentation_url: "http://developer.shotgunsoftware.com/tk-framework-shotgunutils/shotgun_globals.html"
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}

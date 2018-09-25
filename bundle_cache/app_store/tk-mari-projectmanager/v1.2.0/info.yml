@@ -1,0 +1,68 @@
+# Copyright (c) 2013 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+# expected fields in the configuration file for this app
+configuration:
+    template_new_project_name:
+        type: template
+        fields: context, name
+        description: A template used to construct the name for a new Mari project.  This
+                     template must contain a 'name' key.
+
+    get_project_creation_args_hook:
+        type: hook
+        parameters: [sg_publish_data]
+        default_value: "{self}/get_project_creation_args.py"
+        description: "Specify a hook that will return the additional arguments that will
+                      be passed to the Mari project creation method.  See default hook
+                      and Mari documentation for details of what these args should be."
+
+    post_project_creation_hook:
+        type: hook
+        parameters: [sg_publish_data]
+        default_value: "{self}/post_project_creation.py"
+        description: "Specify a hook that will run after the project was created in
+                     Mari."
+                      
+    default_project_name:
+      type: str
+      description:  The default name that gets used to populate the UI when starting a 
+                    new project.
+      default_value: Shotgun
+      
+    publish_types:
+      type: list
+      default_value: ["Alembic Cache"]
+      allows_empty: True
+      description: A list of publish types that can be opened as geometry into Mari.  They
+                   will be used to filter the Select Publish dialog when adding geometry
+                   publishes to be loaded into a new project.
+      values:
+        type: str
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item
+display_name: "Mari Project Manager"
+description: "Shotgun aware project management for Mari"
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.14.66"
+
+# the engines that this app can operate in:
+supported_engines: ["tk-mari"] 
+
+# the frameworks required to run this app
+frameworks:
+- {"name": "tk-framework-widget", "version": "v0.2.x"}

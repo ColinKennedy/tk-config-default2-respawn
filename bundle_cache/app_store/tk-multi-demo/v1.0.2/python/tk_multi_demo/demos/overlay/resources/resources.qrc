@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="tk_multi_demo_overlay">
+    <file>toolkit_icon.png</file>
+  </qresource>
+</RCC>

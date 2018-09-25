@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="tk_multi_demo_help">
+    <file>summary_help.png</file>
+    <file>select_help.png</file>
+    <file>tabs_help.png</file>
+  </qresource>
+</RCC>

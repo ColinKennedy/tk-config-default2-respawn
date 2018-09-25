@@ -1,0 +1,24 @@
+engines:
+    test_engine:
+        location: {'type': 'dev', 'path': '{PIPELINE_CONFIG}/config/bundles/test_engine'}
+        debug_logging: false
+
+        apps:
+            tk-multi-breakdown:
+                location: {'type': 'dev', 'path': '${BUNDLE_ROOT}/tk-multi-breakdown'}
+                hook_scene_operations: '{config}/scene_operations.py'
+
+                
+frameworks:
+  tk-framework-widget_v0.2.x:
+    location: {name: tk-framework-widget, type: dev, version: v0.2.33, path: '${BUNDLE_ROOT}/tk-framework-widget' }
+  tk-framework-shotgunutils_v2.x.x:
+    location: {name: tk-framework-shotgunutils, type: dev, version: v2.0.10, path: '${BUNDLE_ROOT}/tk-framework-shotgunutils' }
+  tk-framework-shotgunutils_v4.x.x:
+    location: {name: tk-framework-shotgunutils, type: dev, version: v2.0.10, path: '${BUNDLE_ROOT}/tk-framework-shotgunutils' }
+  tk-framework-qtwidgets_v1.x.x:
+    location: {name: tk-framework-qtwidgets, type: dev, version: v1.0.1, path: '${BUNDLE_ROOT}/tk-framework-qtwidgets' }
+  tk-framework-qtwidgets_v2.x.x:
+    location: {name: tk-framework-qtwidgets, type: dev, version: v1.0.1, path: '${BUNDLE_ROOT}/tk-framework-qtwidgets' }
+
+                

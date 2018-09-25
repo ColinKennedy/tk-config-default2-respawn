@@ -1,0 +1,90 @@
+Build instructions for Pyside, QT and Python - on Windows
+------------------------------------------------------------------
+
+This version of pyside was built with python 2.6 (64 bit) and QT 4.7.0 on windows 7 
+to match Motionbuilder 2012/2013.
+
+The compiler was Visual studio express 2008 with the latest microsoft Platform SDK. 
+
+Note: Motionbuilder's Qt library is not always compiled with the same visual studio 
+      version as Motionbuilder itself. Therefore, you can't simply use Motionbuilder's
+      documented visual studio compiler version as a reference to build Qt. 
+
+      Instead, use dumpbin.exe /headers on QtCore4.dll in the Motionbuilder's bin/x64 
+      folder and look at the 'linker version' to know what version of visual studio to 
+      compile Qt with.
+
+PREPARATIONS
+=================
+- install cmake
+- install git
+- install python 2.6 (64 bit) using the binary installer
+- install openssl http://slproweb.com/download/Win64OpenSSL-1_0_1c.exe
+- install visual studio express 2008 
+- install the .net framework v4
+- install the microsoft platform SDK
+--  note! If you are getting strange errors, you may need to uninstall the 
+    visual studio 2008 redistributable - see 
+    http://stackoverflow.com/questions/1901279/windows-7-sdk-installation-failure
+- set up VC Express to use the SDK instead of the bundled libraries - see here:
+  http://maliciousattacker.blogspot.co.uk/2008/10/creating-64-bit-applications-with.html
+
+BUILDING QT
+===========
+- download qt open source 4.7.0
+- start the Platform SDK shell - this configures the frameworks to be 64 bit
+- configure it using: configure.exe -release -opensource
+- after configuration, build it using: nmake
+- make sure to add the final bin directory to your PATH so that the dlls are found.
+
+BUILDING PYSIDE
+===============
+- make sure that git.exe is in your PATH
+- start the Platform SDK shell again, this will set up compilers to be 64 bit mode
+- get the code and set the tag
+-- git clone https://github.com/PySide/pyside-setup.git pyside-setup
+-- cd pyside-setup
+-- git checkout 1.1.2
+
+- build pyside:
+-- c:\Python26\python.exe setup.py bdist_wininst --qmake=c:\users\tank\desktop\qt-everywhere-opensource-src-4.7.0\bin\qmake.exe --openssl=c:\OpenSSL-Win64\bin
+
+- You can find the build in pyside-setup/pyside_install/py2.6-qt4.7.0-64bit-release/
+
+HOOKING UP WITH MOTIONBUILDER
+====================
+
+Now for the more tricky part. We need to make sure that all the dynamic library locations 
+are repointed to suit our purposes.
+
+The target structure is as follows:
+
+pyside112_py26_qt470
+ |
+ |-- python
+ |     \----PySide
+ |           |----QtGui.so
+ |           |                [lots of files]
+ |           \----GtCore.so
+ |
+ \-- lib
+       \----libpyside-python-xyz.so
+
+
+TESTING IN MOBU
+===============
+
+Last step is to test in mobu. This is simple. 
+
+- Launch Maya
+- Add the pythonpath to sys.path
+- Add the lib directory to PATH
+- Run some QT code:
+from PySide import QtGui
+wid = QtGui.QWidget()
+wid.resize(250, 150)
+wid.setWindowTitle('Simple')
+wid.show()
+
+
+

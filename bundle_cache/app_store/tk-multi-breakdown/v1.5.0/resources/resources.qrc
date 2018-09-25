@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="res">
+    <file>red_bullet.png</file>
+    <file>green_bullet.png</file>
+    <file>empty_bullet.png</file>
+    <file>red_overlay.png</file>
+    <file>green_overlay.png</file>
+    <file>no_thumb.png</file>
+  </qresource>
+</RCC>

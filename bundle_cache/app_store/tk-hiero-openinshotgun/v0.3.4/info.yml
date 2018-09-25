@@ -1,0 +1,13 @@
+# expected fields in the configuration file for this app
+configuration:
+
+# the engines that this app can operate in:
+supported_engines: [tk-hiero, tk-nuke]
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item
+display_name: "Open In Shotgun"
+description: "App that adds a context menu to open track items as Shots in
+             Shotgun"

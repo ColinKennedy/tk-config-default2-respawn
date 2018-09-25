@@ -1,0 +1,74 @@
+# Copyright (c) 2014 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this engine
+
+# expected fields in the configuration file for this engine
+configuration:
+
+    menu_name:
+        type: str
+        description: One line description of this profile. This will appear on the menu in Flame.
+        default_value: "Submit for Shotgun review"
+                     
+    shotgun_entity_type:
+        type: str
+        description: The entity type in Shotgun to associate a Flame export with.
+        default_value: "Sequence"
+    
+    task_template:
+        type: str
+        description: The Shotgun task template to assign to new shotgun entities or blank if none.
+        default_value: ""
+
+    bypass_shotgun_transcoding:
+        description: Try to bypass the Shotgun server side transcoding if possible. This will only generate
+                     and upload a h264 quicktime and not a webm, meaning that playback will not be
+                     supported on firefox and no filmstrip thumbnails will be generated. The benefit of
+                     bypassing the transcoding is that the sequence is reviewable immediately after upload
+                     and the quality is significantly better.
+        type: bool
+        default_value: False
+
+    background_export:
+        description: Is the movie generation for the preview done in background with
+                     a job sent to Backburner or directly in foreground during the
+                     submission process.
+        type: bool
+        default_value: True
+
+    settings_hook:
+        type: hook
+        default_value: "{self}/settings.py"
+        description: Contains logic to generate settings and presets for the Flame export profile
+                     used to generate the output. 
+    
+
+
+# this app works in all engines - it does not contain 
+# any host application specific commands
+supported_engines: tk-flame
+
+# the Shotgun fields that this engine needs in order to operate correctly
+requires_shotgun_fields:
+        
+# More verbose description of this item 
+display_name: "Flame Review Export"
+description: "Sends sequences in Flame to Shotgun Review."
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.18.45"
+requires_engine_version: "v1.14.3"
+
+# the frameworks required to run this app
+frameworks:
+
+    

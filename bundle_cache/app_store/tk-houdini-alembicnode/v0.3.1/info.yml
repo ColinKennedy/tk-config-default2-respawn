@@ -1,0 +1,98 @@
+# Copyright (c) 2015 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+# ----------------------------------------------------
+#
+# Metadata defining the behaviour and requirements for this app
+
+# expected fields in the configuration file for this app
+configuration:
+
+    default_node_name:
+        type: str
+        description: >
+            A default name for Alembic output nodes created in houdini.
+            Allowed characters include letters, numbers, periods, dashes, or
+            underscores.
+        default_value: sgtk_alembic
+
+    work_file_template:
+        type: template
+        description: >
+            A reference to a template which locates a Houdini work file on
+            disk.  This is used to drive the version and optionally the name of
+            output files.
+        fields: context, version, [name]
+
+    output_profiles:
+        type: list
+        allows_empty: False
+        description: >
+            A list of dictionaries defining the various alembic output
+            profiles. Each profile contains a unique name that describes the
+            profile, the cach template for writing to disk, a color to
+            distinguish each profile type in the node graph, and optional
+            settings to apply to the internal Alembic node.
+            
+        values: 
+            type: dict
+            description: > 
+                An output profile dictionary that defines how the Tk Alembic
+                node should look in houdini and where it should write its
+                cache.
+            items:
+                name:
+                    type: str
+                    description: >
+                        A human readable name describing this output profile.
+
+                settings:
+                    type: dict
+                    description: >
+                        A dictionary of settings to apply to the internal
+                        Alembic node when this profile is selected.
+
+                color:
+                    type: list     
+                    description: >
+                        Specify a list of 3 values in the range 0.0-1.0 that
+                        represent the RGB values to be set for the node
+                        background/tile_color in the node graph when this
+                        profile is used. Specify an empty list to use the
+                        default colour.
+                    values:
+                        type: float
+                    allows_empty: True
+                    default_value: []
+
+                output_cache_template:
+                    type: template
+                    description: >
+                        A reference to a template which defines where the
+                        alembic cache will be written to disk. 
+                    fields: context, version, [name], [node]
+
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item 
+display_name: "Alembic Output Node"
+description: "Support for the Toolkit Alembic output node in Houdini."
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.12.5"
+requires_engine_version: "v0.2.0"
+
+# the engines that this app can operate in:
+supported_engines: [tk-houdini]
+
+# the frameworks required to run this app
+frameworks: 

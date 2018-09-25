@@ -1,0 +1,7 @@
+<RCC>
+  <qresource prefix="tk-flame-review">
+    <file>ui_splash.png</file>
+    <file>submission_complete.png</file>
+    <file>submission_failed.png</file>
+  </qresource>
+</RCC>

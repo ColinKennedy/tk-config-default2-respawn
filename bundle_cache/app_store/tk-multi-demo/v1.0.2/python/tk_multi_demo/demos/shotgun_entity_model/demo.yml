@@ -1,0 +1,23 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Shotgun Entity Model"
+
+description:
+    A convenience wrapper around the ShotgunModel. This model is useful when you
+    want to represent a tree view of Sequences, Shots or Assets. By default, the
+    model will associate standard dark-style Shotgun entity type icons to items
+    in the list.
+
+documentation_url: "http://developer.shotgunsoftware.com/tk-framework-shotgunutils/shotgun_model.html#shotgunentitymodel"
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}

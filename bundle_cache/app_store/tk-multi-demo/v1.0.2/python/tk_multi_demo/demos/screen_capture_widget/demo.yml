@@ -1,0 +1,22 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Screen Capture"
+
+description:
+  The screen capture widgets makes it easy to take screenshots. The widget
+  provides several different ways in which the screen can be captured, either
+  via a cross hair style selection or by grabbing the entire screen.
+
+documentation_url: http://developer.shotgunsoftware.com/tk-framework-qtwidgets/screen_grab.html
+
+frameworks:
+  - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

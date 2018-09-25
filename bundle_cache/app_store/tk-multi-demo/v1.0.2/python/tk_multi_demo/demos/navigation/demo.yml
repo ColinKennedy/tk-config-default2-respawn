@@ -1,0 +1,25 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Navigation"
+
+description:
+    The navigation module contains standard widgets that can be used to track
+    navigation and state. The breadcrumbs widget is a standard widget that
+    displays a history of things separated by arrows. The navigation widget
+    implements the standard home/next/prev concept that can be found in several
+    Toolkit apps.
+
+documentation_url: http://developer.shotgunsoftware.com/tk-framework-qtwidgets/navigation.html
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

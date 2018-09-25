@@ -1,0 +1,24 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Custom Field Widget"
+
+description:
+    Toolkit provides a set of standard widgets to display and edit Shotgun
+    fields within a Qt application. This demo shows how to override one of those
+    default widgets with a custom widget. Custom widgets can be used for
+    displaying values, editing values, or both.
+
+documentation_url: http://developer.shotgunsoftware.com/tk-framework-qtwidgets/shotgun_fields.html#field-widget-metaclass
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

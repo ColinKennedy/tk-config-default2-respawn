@@ -1,0 +1,25 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Global Search"
+
+description:
+    The global search widget is similar to the search found in Shotgun. It
+    returns a number of matches based on a text that is being typed in by the
+    user. Once a user selects an object, a signal fires to indicate the request.
+    The breadth of the search can be limited by specifying entity types and
+    filters to search against.
+
+documentation_url: http://developer.shotgunsoftware.com/tk-framework-qtwidgets/global_search_widget.html
+
+frameworks:
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}

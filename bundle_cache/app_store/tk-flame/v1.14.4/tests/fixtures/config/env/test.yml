@@ -1,0 +1,8 @@
+engines:
+    tk-flame:
+        location:
+            type: dev
+            path: $TK_FLAME_REPO_ROOT
+        debug_logging: true
+        apps:
+frameworks:

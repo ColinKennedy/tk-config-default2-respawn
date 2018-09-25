@@ -1,0 +1,28 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Shotgun Hierarchy"
+
+description:
+    The SimpleShotgunHierarchyModel in combination with the
+    ShotgunHierarchyView displays an entity hierarchy as defined in the
+    Tracking Settings in Shotgun. The model works by providing a url to the
+    root level of the hierarchy you're interested in (ex. /Project/65), a
+    'seed' entity field which represents where the hierarchy should lead to
+    (ex. PublishedFile.entity, and an optional dictionary that defines the
+    fields that should be returned for the various entity types in the
+    hierarchy. The model is lazy loaded as items are expanded.
+
+documentation_url: "http://developer.shotgunsoftware.com/tk-framework-shotgunutils"
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

@@ -1,0 +1,69 @@
+# Copyright (c) 2013 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+# expected fields in the configuration file for this app
+configuration:
+
+    # general settings
+    template_work:
+        type: template
+        fields: context, version, *
+        description: A reference to a template which locates a work file on disk.
+        
+    template_snapshot:
+        type: template
+        fields: context, version, *
+        description: A reference to a template which defines the location where snapshot
+                     backups will be stored on disk.
+
+    hook_scene_operation:
+        type: hook
+        parameters: [operation, file_path]
+        default_value: "scene_operation_{engine_name}"
+        description: All the application specific scene operations (open, save etc) that 
+                     the app needs to carry out are collected in this hook.
+        
+    hook_copy_file:
+        type: hook
+        parameters: [source_path, target_path]
+        default_value: copy_file
+        description: Specify a hook that will be used to copy the file 'source_path' 
+                     to 'target_path'.
+    
+    hook_thumbnail:
+        type: hook
+        parameters: []
+        default_value: thumbnail
+        description: Specify a hook to pre-generate a thumbnail for the snapshot.
+        
+            
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item 
+display_name: "Scene Snapshot"
+description: This app lets you quickly take a snapshot of the scene that you are working
+             on - essentially a quick, personal backup. You can also browse your history and
+             restore old snapshots. 
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.14.58"
+requires_engine_version: 
+
+# this app works in all engines - it does not contain any host application specific commands
+supported_engines: 
+
+# the frameworks required to run this app
+frameworks:
+- {"name": "tk-framework-widget", "version": "v0.2.x"}
+    

@@ -1,0 +1,101 @@
+# Copyright (c) 2013 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+# expected fields in the configuration file for this app
+configuration:
+    upload_to_shotgun:
+        type: bool
+        default_value: true
+        description: Should the movie being created be uploaded to Shotgun
+                     as a version or just kept on disk? Disabling this as well
+                     as the store_on_disk option effectively disables the whole
+                     tool.
+
+    store_on_disk:
+        type: bool
+        default_value: true
+        description: Should the movie being created be kept on disk? Disabling
+                     this as well as the upload_to_shotgun option will
+                     effectively disable the whole tool.
+
+    movie_path_template:
+        type: template
+        required_fields: []
+        optional_fields: "*"
+        description: Template defining the output location of the movie file
+                     on the the file system. For this template you can use all
+                     the fields defined in the template passed to the
+                     render_and_submit fields. In addition to these you can use
+                     the special fields width and height, which contain the
+                     resolution of the movie. If the store_on_disk setting is
+                     false, this setting will still be required but will be used
+                     as a temporary location for processing before the file is
+                     uploaded to Shotgun.
+
+    movie_width:
+        type: int
+        default_value: 1024
+        description: The width of the rendered movie file
+
+    movie_height:
+        type: int
+        default_value: 540
+        description: The height of the rendered movie file
+
+    new_version_status:
+        type: str
+        default_value: rev
+        description: The value to use for a new Version's status.
+
+    version_number_padding:
+        type: int
+        default_value: 3
+        description: This value will be used to pad the version number in the
+                     slate and various movie burnins. This will not affect version
+                     number padding in the movie filename. See movie_path_template.
+                     Use 1 for no padding.
+
+    slate_logo:
+        type: config_path
+        description: This is the path to an image to use on the slate such as a
+                     company logo. The supplied image will be reformated into a 
+                     400 pixel box and the lower left corner of the logo will be
+                     aligned 100 pixels to the right and 100 pixels above the
+                     lower left corner of the slate. You can use an image with
+                     an alpha channel if you want to add transparency. Currently
+                     any image format supported by Nuke is adequate. If this
+                     setting is an empty string, no logo will be applied.
+        default_value: ""
+
+    codec_settings_hook:
+        type: hook
+        description: Hook for customizing codec settings used when generating items
+                     for review.
+        default_value: '{self}/codec_settings.py'
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item 
+display_name: "Review Submission"
+description: "Provides functionality to submit image sequences to Shotgun for review."
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.14.0"
+requires_engine_version: 
+
+# For now this app is only compatible with Nuke.
+supported_engines: ["tk-nuke"]
+
+# the frameworks required to run this app
+frameworks:

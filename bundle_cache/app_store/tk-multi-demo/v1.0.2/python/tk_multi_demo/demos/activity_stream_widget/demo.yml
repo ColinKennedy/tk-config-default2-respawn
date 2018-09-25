@@ -1,0 +1,28 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+# More verbose description of this item
+display_name: "Activity Stream"
+
+description:
+    The activity stream widget is a QT widget that renders the activity stream
+    for a given Shotgun entity. The functionality is similar to that in the
+    activity stream found inside the Shotgun web application. Publishes and
+    Versions show up with thumbnails, optionally with playback links. Notes
+    show up with replies and attachments and you can reply to notes directly
+    in the activity stream.
+
+documentation_url: "http://developer.shotgunsoftware.com/tk-framework-qtwidgets/activity_stream.html#activitystreamwidget"
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

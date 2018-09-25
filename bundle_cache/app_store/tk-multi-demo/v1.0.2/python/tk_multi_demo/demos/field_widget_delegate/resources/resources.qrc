@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="tk_multi_demo_field_widget_delegate">
+    <file>project_1.png</file>
+  </qresource>
+</RCC>

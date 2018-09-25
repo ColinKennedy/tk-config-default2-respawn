@@ -1,0 +1,57 @@
+# Copyright (c) 2013 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+
+# expected fields in the configuration file for this app
+configuration:
+    rv_path_windows:       
+        type: str
+        default_value: "C:\\Program Files\\RV\\RV64.exe"
+        description: The path to the Rv executable on Windows.  
+    rv_path_linux:       
+        type: str
+        default_value: "rv"  
+        description: The path to the Rv executable on Linux.  
+    rv_path_mac:       
+        type: str
+        default_value: "/Applications/RV64.app"  
+        description: The path to the Rv executable on Macosx.                  
+    enable_rv_mode:
+        type: bool
+        default_value: true
+        description: Toggles the display of a menu item that allows a user to jump the Screening Room RV Player.
+    enable_web_mode:
+        type: bool
+        default_value: true
+        description: Toggles the display of a menu item that allows a user to jump the Screening Room Web Player.
+    init_hook:
+        type: hook
+        default_value: "{self}/init.py"
+        description: This hook contains methods that a user can override in order
+                     control how the environment is initialized before screening
+                     room is launched. 
+
+
+# this multi app runs in all engines
+supported_engines: 
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item 
+display_name: "Screening Room Integration"
+description: "Screening Room integration right inside your application."
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.12.5"
+requires_engine_version:

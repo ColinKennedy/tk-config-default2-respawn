@@ -1,0 +1,25 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+# More verbose description of this item
+display_name: "Help Screen Popup"
+
+description:
+    The help popup is a window which presents a series of help images to the
+    user, typically displayed at startup, to help introduce new feature or a
+    new application to a user. The information is presented as an interactive
+    slide show where the user can easily navigate between sides.
+
+documentation_url: "http://developer.shotgunsoftware.com/tk-framework-qtwidgets/help_screen.html"
+
+frameworks:
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

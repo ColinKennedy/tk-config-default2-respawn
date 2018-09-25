@@ -1,0 +1,24 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Shotgun Menu"
+
+description:
+    The ShotgunMenu class provides a standardized interface, look and feel for
+    building menus that interact with Shotgun. The makes it easy to add labels
+    and groups of actions to menus with a consistent styling. A toolkit app for
+    demo and QA of app building blocks available in shotgunutils and qtwidgets
+    frameworks
+
+documentation_url: http://developer.shotgunsoftware.com/tk-framework-qtwidgets/shotgun_menus.html#shotgun-menu
+
+frameworks:
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

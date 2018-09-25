@@ -1,0 +1,8 @@
+<RCC>
+  <qresource prefix="tk_multi_demo_help_screen_popup">
+    <file>help_screen1.png</file>
+    <file>help_screen2.png</file>
+    <file>help_screen3.png</file>
+    <file>help_screen4.png</file>
+  </qresource>
+</RCC>

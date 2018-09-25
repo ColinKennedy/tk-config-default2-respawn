@@ -1,0 +1,26 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# More verbose description of this item
+display_name: "Shotgun Field Widgets Form"
+
+description:
+  The shotgun_fields module provides access to Qt widgets that correspond to the
+  field types available on Shotgun entities. The purpose of these widgets is to
+  make it easier to build apps that interact with Shotgun in a standardized way.
+  This demo shows an exaple of how to use these widgets directly to build a
+  form view for specific fields on an entity. Note that this is just a demo, and
+  editing the values in the form will not be pushed back to Shotgun.
+
+documentation_url: http://developer.shotgunsoftware.com/tk-framework-qtwidgets/shotgun_fields.html
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

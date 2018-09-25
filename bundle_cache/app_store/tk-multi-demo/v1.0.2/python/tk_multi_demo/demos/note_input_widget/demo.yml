@@ -1,0 +1,29 @@
+# Copyright (c) 2016 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this app
+
+# More verbose description of this item
+display_name: "Note Editor"
+
+description:
+    The note editor widget makes it easy to attach Notes to SG entities. You can
+    use the widget either to create or reply to notes. The editor includes
+    screen grabbing capabilities and a user name auto completer. If you start
+    typing @xyz, an auto completer will kick in and show matching groups and
+    users. Once added to the note text, these users will automatically be
+    included in the TO list in the case of a new note and in the CC list in the
+    case of a reply.
+
+documentation_url: "http://developer.shotgunsoftware.com/tk-framework-qtwidgets/note_input_widget.html"
+
+frameworks:
+    - {"name": "tk-framework-shotgunutils", "version": "v4.x.x"}
+    - {"name": "tk-framework-qtwidgets", "version": "v2.x.x"}

@@ -1,0 +1,192 @@
+# Copyright (c) 2014 Shotgun Software Inc.
+#
+# CONFIDENTIAL AND PROPRIETARY
+#
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this engine
+
+# expected fields in the configuration file for this engine
+configuration:
+
+    menu_name:
+        type: str
+        description: One line description of this profile. This will appear on the menu in Flame.
+        default_value: "Shotgun Shot Export"
+
+    task_template:
+        type: str
+        description: The Shotgun task template to assign to new shots created
+        default_value: "Basic shot template"
+
+    settings_hook:
+        type: hook
+        default_value: "{self}/settings.py"
+        description: Contains logic to generate settings and presets for the Flame export profile
+                     used to generate the output.
+
+    shot_parent_entity_type:
+        type: shotgun_entity_type
+        default_value: Sequence
+        description: The entity type which shots are parented to in the current setup.
+
+    shot_parent_link_field:
+        type: str
+        default_value: sg_sequence
+        description: The name of a single entity link field which links shot to a the parent entity
+                     type defined in the shot_parent_entity setting
+
+    shot_parent_task_template:
+        type: str
+        description: The Shotgun task template to assign to new shot parent entities
+        default_value: ""
+
+    plate_presets:
+        type: list
+        description: "A list of dictionaries in which you define the various export presets to
+                     appear on the profiles dropdown in the user interface. These presets are matched up
+                     with export profiles defined inside the settings hook. The list of presets in this setting
+                     basically defines the various profiles and their locations on disk, and the hook contains
+                     all the details defining how the export should be written out to disk (resolution, bit
+                     depth, file format etc). The structure of this setting is a list of dictionaries. Each
+                     dictionary item contains three keys: `name`, `publish_type` and `template`. The `name`
+                     parameter is the identifier for the preset - this name will appear in the dropdown in the UI.
+                     It is also used to identify the preset inside the settings hook. The `publish_type` parameter
+                     defines the publish type that should be associated with any exported plates when they reach
+                     Shotgun. Lastly, the `template` parameter defines where on disk the image sequence should be
+                     written out."
+        allows_empty: False
+        values:
+            type: dict
+            items:
+
+                name:
+                    type: str
+                    description: The name of this preset.
+
+                cut_type:
+                    type: str
+                    description: The cut type to associate with this preset.
+                    default_value: ""
+
+                publish_type:
+                    type: tank_type
+                    description: The publish type for Flame plates.
+                    default_value: "Flame Render"
+
+                template:
+                    description: Toolkit file system template to control where plate output goes on disk.
+                    type: template
+                    fields: context, [SEQ], [flame.frame], Shot, version, segment_name, [YYYY], [MM], [DD], [hh], [mm], [ss], [width], [height], *
+
+                quicktime_template:
+                    description: If not set to null, a higher res quicktime will be generated and stored on disk,
+                                 suitable for playback in client based playback tools such as RV. It will be linked
+                                 up with the version in Shotgun. The optional time stamp fields will reflect the
+                                 time stamp fields of the main render template and you can only include fields that
+                                 are present in the main render template.
+                    type: template
+                    allows_empty: True
+                    default_value: null
+                    fields: context, Shot, version, segment_name, [YYYY], [MM], [DD], [hh], [mm], [ss], *
+
+
+                batch_render_template:
+                    description: The output on disk when doing batch renders in flame. This setting is only
+                                 supported in Flame 2016 Ext 1 and above. If set to null, batch renders will be
+                                 written to the same location where the initial export is written.
+                    type: template
+                    allows_empty: True
+                    default_value: null
+                    fields: context, [SEQ], [flame.frame], Shot, version, segment_name, [YYYY], [MM], [DD], [hh], [mm], [ss], [width], [height], *
+
+
+                batch_quicktime_template:
+                    description: High res quicktime output for batch renders. If not set to null, a higher res
+                                 quicktime will be generated and stored on disk, suitable for playback in client
+                                 based playback tools such as RV. It will be linked up with the version in Shotgun.
+                                 The optional time stamp fields will reflect the time stamp fields of the main render
+                                 template and you can only include fields that are present in the main batch render template.
+                    type: template
+                    allows_empty: True
+                    default_value: null
+                    fields: context, Shot, version, segment_name, [YYYY], [MM], [DD], [hh], [mm], [ss], *
+
+                quicktime_publish_type:
+                    type: tank_type
+                    description: The publish type for quicktimes generated on disk.
+                    default_value: "Flame Quicktime"
+
+                upload_quicktime:
+                    description: Upload a quicktime to Shotgun when publishing.
+                    type: bool
+                    default_value: true
+
+                frame_handles:
+                    description: Length of handles to include as part of exported media.
+                    type: int
+                    default_value: 10
+
+                #use_timecode_as_frame_number:
+                #    description: Use timecode frame numbering when exporting frame sequences
+                #                 (optional / commented out since default value do not populate on config upgrade)
+                #    type: bool
+                #    default_value: True
+
+    segment_clip_template:
+        description: "Toolkit file system template to control where segment based clip files go on disk.
+                     A segment in Flame is a 'block' on the timeline, so a shot may end up with multiple segments.
+                     This clip file contains Flame related metadata that Flame uses to deconstruct data as it is
+                     being read back into the system."
+        type: template
+        fields: context, Shot, segment_name, [YYYY], [MM], [DD], [hh], [mm], [ss], *
+
+    bypass_shotgun_transcoding:
+        description: Try to bypass the Shotgun server side transcoding if possible. This will only generate
+                     and upload a h264 quicktime and not a webm, meaning that playback will not be
+                     supported on all browsers. For more information about this option, please see the documentation.
+        type: bool
+        default_value: false
+
+    shot_clip_template:
+        description: Toolkit file system template to control where shot based clip files go on disk
+
+        type: template
+        fields: context, Shot, [YYYY], [MM], [DD], [hh], [mm], [ss], *
+
+    batch_template:
+        description: Toolkit file system template to control where Flame batch files go on disk
+        type: template
+        fields: context, Shot, version, [YYYY], [MM], [DD], [hh], [mm], [ss], *
+
+    batch_publish_type:
+        type: tank_type
+        description: The publish type for Flame batch scripts
+        default_value: "Flame Batch File"
+
+
+
+# this app works in all engines - it does not contain
+# any host application specific commands
+supported_engines:
+
+# the Shotgun fields that this engine needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item
+display_name: "Flame Shot Export"
+description: "Export Flame sequences to Shotgun and the file system."
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.18.45"
+requires_engine_version: "v1.14.4"
+
+# the frameworks required to run this app
+frameworks:
+
+

@@ -1,0 +1,245 @@
+# expected fields in the configuration file for this app
+configuration:
+
+    default_task_template:
+        type: str
+        description: The default shot task template to use when the app is
+                     creating new shots in Shotgun. This setting is presented
+                     in the Custom Shotgun Export UI and you can change it
+                     prior to running the export if you want.
+        default_value: Basic shot template
+
+    audio_published_file_type:
+        type: tank_type
+        description: The string value of the Published File/Tank Type used for published audio.
+        default_value: Hiero Audio
+
+    plate_published_file_type:
+        type: tank_type
+        description: The string value of the Published File/Tank Type used for published plates.
+        default_value: Hiero Plate
+
+    nuke_script_published_file_type:
+        type: tank_type
+        description: The string value of the Published File/Tank Type used for Nuke scripts.
+        default_value: Nuke Script
+
+    nuke_script_toolkit_write_nodes:
+        type: list
+        description: "A list of dictionaries in which you define the Sgtk write
+                     nodes that will be added to the published nuke scripts.
+                     Each dictionary entry needs to have the following keys:
+                     channel - the value for the 'output' knob in the created node.
+                     name - the profile name of the write node to create."
+        allows_empty: True
+        values:
+            type: dict
+            items:
+                channel: { type: str }
+                name: { type: str }
+        description:
+
+    custom_template_fields:
+      type: list
+      description: "A list of custom strings to add to Hiero's resolver.
+                   Each item is a dictionary specifying the keyword to be
+                   replaced and a description for that keyword that will show
+                   up in the tooltip for the export tree.  A valid entry will
+                   look like '{keyword: a_keyword, description: This is a keyword}'.
+                   Each keyword needs to be translated to a resolved string by the
+                   resolve custom strings hook."
+      allows_empty: True
+      values:
+        type: dict
+        items:
+            keyword: { type: str }
+            description: { type: str }
+      default_value: []
+
+    default_task_filter:
+        type: str
+        description: "A filter that will return the task in the Shot that publishes will
+                     be registered against.  This value must be a valid filter that can be
+                     passed to the find method of the Shotgun api, without a condition for
+                     entity (a value linking entity to the Shot will be added at publish
+                     time).  If the filter contains a condition in the form
+                     ['step.Step.code', 'is', VALUE], then whatver VALUE is will be used
+                     by the default translate_template hook as the value to use when
+                     expanding {Step} in the publish templates.  If the filter results
+                     in a single task, then any publishes created by the app will be
+                     associated with that task.  Otherwise they will only be associated
+                     with the Shot."
+        default_value: "[['step.Step.code', 'is', 'Comp']]"
+
+    # hooks
+    hook_translate_template:
+        type: hook
+        description: "Called when a template needs to be translated into a Hiero
+                     style replacement string.  First argument is the template
+                     to translate. Second argument is a string describing the
+                     type of template being translated. The return value is the
+                     translated string."
+        parameters: [template, output_type]
+        default_value: hiero_translate_template
+
+    hook_upload_thumbnail:
+        type: hook
+        description: "Called when a thumbnail needs to be uploaded to Shotgun
+                     for a Hiero source.  First argument is a dictionary that
+                     is the Shotgun entity to upload for.  The second argument
+                     is the Hiero Source to get the thumbnail from. The third
+                     argument is the Hiero TrackItem that the source was pulled
+                     from.  The TrackItem may be None when the thumbnail does
+                     not correspond to an item from a timeline."
+        parameters: [entity, source, item]
+        default_value: hiero_upload_thumbnail
+
+    hook_get_shot:
+        type: hook
+        description: "Called to return the shot to update cut information for.
+                     The first argument is the Hiero export Task object. The second 
+                     argument is the hiero.core.TrackItem that is driving shot creation.
+                     The third argument is a data dictionary that can be used to pass 
+                     data between different calls to shot create.
+
+                     The return value is a data dictionary for the shot, whose
+                     id will be updated.  Cut information will be merged into this
+                     dictionary before Shotgun update is called on the shot.
+                     The default implementation creates or looks up a sequence
+                     named after the Hiero Sequence being exported and links that to
+                     the shot via the sg_sequence field."
+        parameters: [task, item, data]
+        default_value: hiero_get_shot
+
+    hook_pre_export:
+        type: hook
+        description: "Called prior to starting shotgun's shot processor. It can be used
+                      to clear out caches and do other specific initializations."
+        parameters: [processor]
+        default_value: hiero_pre_export
+
+    hook_resolve_custom_strings:
+        type: hook
+        description: "Called when resolving custom items added to the Hiero resolver
+                      via the custom_template_fields setting.  The first argument is
+                      the keyword being resolved and the second argument is the Hiero
+                      task being run.
+
+                      The return value is the resolved string value for the keyword."
+        parameters: [keyword, task]
+        default_value: hiero_resolve_custom_strings
+
+    hook_get_quicktime_settings:
+        type: hook
+        description: "Called when generating the default settings for creating
+                     a quicktime.  The argument is a boolean that is True when
+                     the resulting quicktime is only for upload to Shotgun and
+                     False when the settings are used for a default Quicktime
+                     transcode.
+
+                     The return value is a tuple of two items.  The first is a
+                     string that is the file_type for the Nuke write node that
+                     will be generated.  The second is a dictionary where the
+                     keys are knob names for the write node, and the values are
+                     the corresponding node values."
+        parameters: [for_shotgun]
+        default_value: hiero_get_quicktime_settings
+
+    hook_update_version_data:
+        type: hook
+        description: "Called before creating a Version in Shotgun for a transcode.
+                     The default values for the version will already be filled in
+                     in the version_data dictionary.  Modify this dictionary to
+                     change what will be passed as an argument to the Shotgun API
+                     create call."
+        parameters: [version_data, task]
+        default_value: hiero_update_version_data
+
+    hook_post_version_creation:
+        type: hook
+        description: "Called after the Version entity is created. The hook is
+                     provided the new entity data dictionary which will include
+                     the ID number of the entity that was created."
+        parameters: [version_data]
+        default_value: hiero_post_version_creation
+
+    hook_get_extra_publish_data:
+        type: hook
+        description: "Called before creating a PublishedFile in Shotgun for a transcode.
+                     This hook should return None if there is no extra info to
+                     associate with the published file, or a dictionary that is
+                     compatible with the Shotgun API's update method."
+        parameters: [task]
+        default_value: hiero_get_extra_publish_data
+
+    hook_customize_export_ui:
+        type: hook
+        description: "Called during initialization of the export UI. Provides methods
+                     for defining custom UI properties on presets, initializing and
+                     injecting custom widgets into the exporter, and setting up custom
+                     widgets to make use of property UI widgets."
+        parameters: []
+        default_value: hiero_customize_export_ui
+
+    hook_update_shot:
+        type: hook
+        description: "Called during SG shot processing. Provides methods for managing
+                     if and how the Shot's entity in updated, and if and how creation
+                     of the Shots filesystem structure happens during export."
+        parameters: []
+        default_value: hiero_update_shot
+
+    hook_update_cuts:
+        type: hook
+        description: "Called during SG shot processing. Provides methods for managing
+                     if and how Cuts and CutItems are created and updated."
+        parameters: []
+        default_value: hiero_update_cuts
+
+    # paths
+    template_plate_path:
+        type: template
+        description: "A reference to a template which specifies the directory to
+                     publish shot plates to.  The translate template hook must
+                     understand how to translate this to Hiero keywords."
+        required_fields: []
+        optional_fields: "*"
+
+    template_nuke_script_path:
+        type: template
+        description: "A reference to a template which specifies what published
+                     nuke scripts will be named.  The translate template hook must
+                     understand how to translate this to Hiero keywords."
+        required_fields: []
+        optional_fields: "*"
+
+    template_render_path:
+        type: template
+        description: "A reference to a template which specifies what renders will
+                     be named. The translate template hook must understand how
+                     to translate this to Hiero keywords."
+        required_fields: []
+        optional_fields: "*"
+
+    template_version:
+        type: template
+        description: "String template that specifies how to format the Hiero tk_version
+                      token as a version string for tk."
+        required_fields: [version]
+        optional_fields: "*"
+
+# the engines that this app can operate in:
+supported_engines: [tk-hiero, tk-nuke]
+
+# the Shotgun fields that this app needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item
+display_name: "Shotgun Export"
+description: "App that adds Shotgun awareness to Nuke Studio's sequence export.  It
+             adds a new processor that will use the configuration to determine
+             paths for Nuke scripts and plates.  It also will use the tags to
+             determine Shotgun Shot status and task templates to create/update
+             the Shots in Shotgun."
+
+requires_core_version: "v0.18.124"

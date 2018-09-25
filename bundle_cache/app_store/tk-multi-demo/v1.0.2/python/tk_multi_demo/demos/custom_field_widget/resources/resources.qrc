@@ -1,0 +1,6 @@
+<RCC>
+  <qresource prefix="tk_custom_field_widget_demo">
+    <file>favorite.png</file>
+    <file>not_favorite.png</file>
+  </qresource>
+</RCC>
