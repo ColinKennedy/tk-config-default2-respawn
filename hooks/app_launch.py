@@ -15,12 +15,20 @@ This hook is executed to launch the applications.
 """
 
 # IMPORT STANDARD LIBRARIES
+import subprocess
 import platform
+import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
-from rez import resolved_context
 import tank
+
+
+ENGINES = {
+    'tk-houdini': ('houdini', ),
+    'tk-maya': ('maya', ),
+    'tk-nuke': ('nuke', ),
+}
 
 
 class AppLaunch(tank.Hook):
@@ -41,11 +49,22 @@ class AppLaunch(tank.Hook):
 
         :returns: (dict) The two valid keys are 'command' (str) and 'return_code' (int).
         """
-        multi_launchapp = self.parent
-        extra = multi_launchapp.get_setting('extra')
-
         adapter = get_adapter(platform.system())
-        packages = adapter.get_packages(engine_name)
+
+        try:
+            import rez as _  # pylint: disable=W0611
+        except ImportError:
+            # If the user doesn't have rez installed properly, try to add it ourselves
+            rez_path = adapter.get_rez_module_root()
+
+            if not rez_path:
+                raise EnvironmentError('rez is not installed and could not be automatically found. Cannot continue.')
+
+            sys.path.append(rez_path)
+
+        from rez import resolved_context
+
+        packages = ENGINES[engine_name]
 
         if not packages:
             self.logger.debug('No rez packages were found. The default boot, instead.')
@@ -90,6 +109,22 @@ class BaseAdapter(object):
     def get_rez_root_command():
         '''str: Print the location where rez is installed (if it is installed).'''
         return 'rez-env rez -- printenv REZ_REZ_ROOT'
+
+    @classmethod
+    def get_rez_module_root(cls):
+        '''str: Get the absolute path to where the rez module is located.'''
+        # TODO : Remove this comment, later
+        # return '/usr/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg'
+        command = cls.get_rez_root_command()
+        module_path, stderr = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
+
+        module_path = module_path.strip()
+
+        if not stderr and module_path:
+            return module_path
+
+        return ''
 
     @classmethod
     def execute(cls, context, args):
