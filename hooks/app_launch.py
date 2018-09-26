@@ -15,11 +15,8 @@ This hook is executed to launch the applications.
 """
 
 # IMPORT STANDARD LIBRARIES
-import subprocess
 import platform
-import sys
 import os
-import re
 
 # IMPORT THIRD-PARTY LIBRARIES
 from rez import resolved_context
