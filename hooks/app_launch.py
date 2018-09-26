@@ -14,9 +14,15 @@ App Launch Hook
 This hook is executed to launch the applications.
 """
 
+# IMPORT STANDARD LIBRARIES
+import subprocess
+import platform
+import sys
 import os
 import re
-import sys
+
+# IMPORT THIRD-PARTY LIBRARIES
+from rez import resolved_context
 import tank
 
 
@@ -39,7 +45,7 @@ class AppLaunch(tank.Hook):
         :returns: (dict) The two valid keys are 'command' (str) and 'return_code' (int).
         """
         multi_launchapp = self.parent
-        extra = multi_launchapp.get_setting("extra")
+        extra = multi_launchapp.get_setting('extra')
 
         adapter = get_adapter(platform.system())
         packages = adapter.get_packages(engine_name)
@@ -54,16 +60,6 @@ class AppLaunch(tank.Hook):
         return adapter.execute(context, app_args)
 
 
-# IMPORT STANDARD LIBRARIES
-import subprocess
-import platform
-import sys
-import os
-
-# IMPORT THIRD-PARTY LIBRARIES
-from rez import resolved_context
-
-
 class BaseAdapter(object):
 
     shell_type = 'bash'
@@ -76,7 +72,7 @@ class BaseAdapter(object):
     def get_command(path, args):
         # Note: Execute the command in the background
         return '{path} {args} &'.format(path=path, args=args)
-    
+
     @classmethod
     def get_packages(cls, name):
         return cls.engines.get(name, tuple())
@@ -88,7 +84,7 @@ class BaseAdapter(object):
     @classmethod
     def execute(cls, context, args):
         command = 'Nuke11.2'
-        
+
         if args:
             command += ' {args}'.format(args=args)
 
@@ -102,7 +98,7 @@ class BaseAdapter(object):
 
         return_code = proc.wait()
         context.print_info(verbosity=True)
-        
+
         return {
             'command': command,
             'return_code': return_code,
