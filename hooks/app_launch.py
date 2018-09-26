@@ -38,40 +38,98 @@ class AppLaunch(tank.Hook):
 
         :returns: (dict) The two valid keys are 'command' (str) and 'return_code' (int).
         """
-        system = sys.platform
+        multi_launchapp = self.parent
+        extra = multi_launchapp.get_setting("extra")
 
-        if system == "linux2":
-            # on linux, we just run the executable directly
-            cmd = "%s %s &" % (app_path, app_args)
+        adapter = get_adapter(platform.system())
+        packages = adapter.get_packages(engine_name)
 
-        elif system == "darwin":
-            # If we're on OS X, then we have two possibilities: we can be asked
-            # to launch an application bundle using the "open" command, or we
-            # might have been given an executable that we need to treat like
-            # any other Unix-style command. The best way we have to know whether
-            # we're in one situation or the other is to check the app path we're
-            # being asked to launch; if it's a .app, we use the "open" command,
-            # and if it's not then we treat it like a typical, Unix executable.
-            if app_path.endswith(".app"):
-                # The -n flag tells the OS to launch a new instance even if one is
-                # already running. The -a flag specifies that the path is an
-                # application and supports both the app bundle form or the full
-                # executable form.
-                cmd = "open -n -a \"%s\"" % (app_path)
-                if app_args:
-                    cmd += " --args \"%s\"" % app_args.replace("\"", "\\\"")
-            else:
-                cmd = "%s %s &" % (app_path, app_args)
+        if not packages:
+            self.logger.debug('No rez packages were found. The default boot, instead.')
+            command = adapter.get_command(app_path, app_args)
+            return_code = os.system(command)
+            return {'command': command, 'return_code': return_code}
 
-        elif system == "win32":
-            # on windows, we run the start command in order to avoid
-            # any command shells popping up as part of the application launch.
-            cmd = "start /B \"App\" \"%s\" %s" % (app_path, app_args)
+        context = resolved_context.ResolvedContext(packages)
+        return adapter.execute(context, app_args)
 
-        # run the command to launch the app
-        exit_code = os.system(cmd)
 
+# IMPORT STANDARD LIBRARIES
+import subprocess
+import platform
+import sys
+import os
+
+# IMPORT THIRD-PARTY LIBRARIES
+from rez import resolved_context
+
+
+class BaseAdapter(object):
+
+    shell_type = 'bash'
+    # TODO : This should be define-able in a YAML file. There's no reason why it should exist here
+    engines = {
+        'tk-nuke': ('nuke', ),
+    }
+
+    @staticmethod
+    def get_command(path, args):
+        # Note: Execute the command in the background
+        return '{path} {args} &'.format(path=path, args=args)
+    
+    @classmethod
+    def get_packages(cls, name):
+        return cls.engines.get(name, tuple())
+
+    @staticmethod
+    def get_rez_root_command():
+        return 'rez-env rez -- printenv REZ_REZ_ROOT'
+
+    @classmethod
+    def execute(cls, context, args):
+        command = 'Nuke11.2'
+        
+        if args:
+            command += ' {args}'.format(args=args)
+            
+        context.execute_command(command)
+    
         return {
-            "command": cmd,
-            "return_code": exit_code
+            'command': command,
+            'return_code': 0,
         }
+
+
+class LinuxAdapter(BaseAdapter):
+    pass
+
+
+class WindowsAdapter(BaseAdapter):
+
+    shell_type = 'cmd'
+
+    @staticmethod
+    def get_command(path, args):
+        # Note: We use the "start" command to avoid any command shells from
+        # popping up as part of the application launch process.
+        #
+        return 'start /B "App" "{path}" {args}'.format(path=path, args=args)
+
+    @staticmethod
+    def get_rez_root_command():
+        return 'rez-env rez -- echo %REZ_REZ_ROOT%'
+
+
+def get_adapter(system=''):
+    if not system:
+        system = platform.system()
+
+    options = {
+        'Linux': LinuxAdapter,
+        'Windows': WindowsAdapter,
+    }
+
+    try:
+        return options[system]
+    except KeyError:
+        raise EnvironmentError('system "{system}" is currently unsupported.'.format(system=system))
