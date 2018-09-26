@@ -91,13 +91,23 @@ class BaseAdapter(object):
         
         if args:
             command += ' {args}'.format(args=args)
-            
-        context.execute_command(command)
-    
+
+        proc = context.execute_shell(
+            command=command,
+            parent_environ=os.environ.copy(),
+            shell=cls.shell_type,
+            stdin=False,
+            block=False
+        )
+
+        return_code = proc.wait()
+        context.print_info(verbosity=True)
+        
         return {
             'command': command,
-            'return_code': 0,
+            'return_code': return_code,
         }
+
 
 
 class LinuxAdapter(BaseAdapter):
