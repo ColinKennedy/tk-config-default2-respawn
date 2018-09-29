@@ -51,6 +51,13 @@ class AppLaunch(tank.Hook):
         """
         adapter = get_adapter(platform.system())
 
+        config_file = get_config_path()
+
+        if is_config_valid(config_file):
+            os.environ['REZ_CONFIG_FILE'] = config_file
+
+        raise ValueError(config_file)
+
         try:
             import rez as _  # pylint: disable=W0611
         except ImportError:
@@ -205,6 +212,14 @@ class WindowsAdapter(BaseAdapter):
         return 'rez-env rez -- echo %REZ_REZ_ROOT%'
 
 
+def _get_config_root_directory():
+    return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+
+def is_config_valid(path):
+    return os.path.isfile(path) and os.stat(path).st_size != 0
+
+
 def get_adapter(system=''):
     '''Get an adapter for the given OS.
 
@@ -233,3 +248,7 @@ def get_adapter(system=''):
     except KeyError:
         raise NotImplementedError('system "{system}" is currently unsupported. Options were, "{options}"'
                                   ''.format(system=system, options=list(options)))
+
+
+def get_config_path():
+    return os.path.join(_get_config_root_directory(), 'rez_packages', '.rezconfig')
