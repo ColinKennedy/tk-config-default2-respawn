@@ -56,8 +56,6 @@ class AppLaunch(tank.Hook):
         if is_config_valid(config_file):
             os.environ['REZ_CONFIG_FILE'] = config_file
 
-        raise ValueError(config_file)
-
         try:
             import rez as _  # pylint: disable=W0611
         except ImportError:
@@ -120,8 +118,8 @@ class BaseAdapter(object):
     @classmethod
     def get_rez_module_root(cls):
         '''str: Get the absolute path to where the rez module is located.'''
-        # TODO : Remove this comment, later
-        # return '/usr/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg'
+        # TODO : Remove this return statement, later
+        return '/usr/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg'
         command = cls.get_rez_root_command()
         module_path, stderr = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True).communicate()
