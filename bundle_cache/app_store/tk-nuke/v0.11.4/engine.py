@@ -417,7 +417,7 @@ class NukeEngine(tank.platform.Engine):
     @property
     def host_info(self):
         """
-        :returns: A {"name": application name, "version": application version} 
+        :returns: A {"name": application name, "version": application version}
                   dictionary with informations about the application hosting this
                   engine.
         """

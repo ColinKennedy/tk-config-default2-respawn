@@ -128,14 +128,27 @@ class NukeLauncher(SoftwareLauncher):
 
         :returns: Generator of :class:`SoftwareVersion`.
         """
-        # Certain platforms have more than one location for installed software
-        for template in self.EXECUTABLE_MATCH_TEMPLATES[sys.platform]:
+        # Use Rez to find installed Nuke versions
+        install_search_paths = (
+            config.config.local_packages_path,
+            config.config.release_packages_path,
+        )
+
+        for root in install_search_paths:
+            template = os.path.join(root, 'nuke', '{version}')
             self.logger.debug("Processing template %s.", template)
-            # Extract all products from that executable.
+
+            found_something = False
             for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
-                self.logger.debug("Processing %s with tokens %s", executable, tokens)
+                self.logger.debug('Processing "{executable}" with tokens "{tokens}".'.format(executable=executable, tokens=tokens))
                 for sw in self._extract_products_from_path(executable, tokens):
+                    found_something = True
                     yield sw
+
+                if found_something:
+                    # Exit after the first definition has been found to avoid duplicates
+                    return
+                    yield
 
     def _extract_products_from_path(self, executable_path, match):
         """
