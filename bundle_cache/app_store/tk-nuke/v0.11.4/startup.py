@@ -14,6 +14,9 @@ import sgtk
 import pprint
 
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
+sys.path.append(r'C:\Users\korinkite\rez\Lib\site-packages\rez-2.22.1-py2.7.egg')
+# TODO : Remove this gross sys.path.append later
+from rez import config
 
 
 class NukeLauncher(SoftwareLauncher):

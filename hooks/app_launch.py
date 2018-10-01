@@ -17,17 +17,31 @@ This hook is executed to launch the applications.
 # IMPORT STANDARD LIBRARIES
 import subprocess
 import platform
+import imp
 import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
+# Add `rezzurect`
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
+sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
+# TODO : Make this build_adapter import more concise (bring to the root folder)
+from rezzurect.build_adapters import build_adapter
+from rezzurect import environment
+
 import tank
 
 
-ENGINES = {
-    'tk-houdini': ('houdini', ),
-    'tk-maya': ('maya', ),
-    'tk-nuke': ('nuke', ),
+_REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
+
+ENGINES_TO_PACKAGE = {
+    'tk-houdini': 'houdini',
+    'tk-maya': 'maya',
+    'tk-nuke': 'nuke',
+}
+PACKAGE_TO_REZ_PACKAGE = {
+    'nuke': 'rez-nuke',
 }
 
 
@@ -49,36 +63,17 @@ class AppLaunch(tank.Hook):
 
         :returns: (dict) The two valid keys are 'command' (str) and 'return_code' (int).
         """
-        adapter = get_adapter(platform.system())
+        init_config()
 
-        config_file = get_config_path()
+        package = ENGINES_TO_PACKAGE[engine_name]
+        runner = get_runner(platform.system())
 
-        if is_config_valid(config_file):
-            os.environ['REZ_CONFIG_FILE'] = config_file
+        if not package:
+            self.logger.debug('No rez package was found. The default boot, instead.')
+            return install_with_os(runner, app_path, app_args)
 
-        try:
-            import rez as _  # pylint: disable=W0611
-        except ImportError:
-            # If the user doesn't have rez installed properly, try to add it ourselves
-            rez_path = adapter.get_rez_module_root()
-
-            if not rez_path:
-                raise EnvironmentError('rez is not installed and could not be automatically found. Cannot continue.')
-
-            sys.path.append(rez_path)
-
-        from rez import resolved_context
-
-        packages = ENGINES[engine_name]
-
-        if not packages:
-            self.logger.debug('No rez packages were found. The default boot, instead.')
-            command = adapter.get_command(app_path, app_args)
-            return_code = os.system(command)
-            return {'command': command, 'return_code': return_code}
-
-        context = resolved_context.ResolvedContext(packages)
-        return adapter.execute(context, app_args)
+        rez_package_name = PACKAGE_TO_REZ_PACKAGE[package]
+        return install_with_rez(rez_package_name, version, runner, app_args)
 
 
 class BaseAdapter(object):
@@ -218,8 +213,93 @@ def is_config_valid(path):
     return os.path.isfile(path) and os.stat(path).st_size != 0
 
 
-def get_adapter(system=''):
-    '''Get an adapter for the given OS.
+def init_config():
+    config_file = get_config_path()
+    os.environ['REZ_CONFIG_FILE'] = config_file
+
+
+def install_with_os(runner, app_path, app_args):
+    command = runner.get_command(app_path, app_args)
+    return_code = os.system(command)
+    return {'command': command, 'return_code': return_code}
+
+
+def install_with_rez(package, version, runner, app_args):
+    def get_context(packages):
+        try:
+            return resolved_context.ResolvedContext(packages)
+        except exceptions.PackageFamilyNotFoundError:
+            return
+
+    try:
+        import rez as _  # pylint: disable=W0611
+    except ImportError:
+        # If the user doesn't have rez installed properly, try to add it ourselves
+        rez_path = runner.get_rez_module_root()
+
+        if not rez_path:
+            raise EnvironmentError('rez is not installed and could not be automatically found. Cannot continue.')
+
+        sys.path.append(rez_path)
+
+    from rez import resolved_context
+    from rez import exceptions
+    from rez import config
+
+    source_path = os.path.join(_REZ_PACKAGE_ROOT, package, version)
+    if not os.path.isdir(source_path):
+        raise RuntimeError('Path "{source_path}" could not be found.'.format(source_path=source_path))
+
+    try:
+        package_module = imp.load_source(
+            'rez_{package}_definition'.format(package=package),
+            os.path.join(source_path, 'package.py'),
+        )
+    except ImportError:
+        raise RuntimeError('install_path "{install_path}" has no package.py file.'.format(
+            install_path=install_path))
+
+    packages = ['{package_module.name}-{version}'.format(
+        package_module=package_module, version=version)]
+    context = get_context(packages)
+
+    if context:
+        return runner.execute(context, app_args)
+
+    # If we get this far, it means that the context failed to resolve. This
+    # happens commonly for 2 reasons
+    # 1. The Rez package was never built and needs to be built.
+    # 2. `package` does not have a Rez package definition.
+    # If the issue is #2, error out. But if it's #1, try to build the package now
+    #
+    build_path = os.path.join(source_path, 'build')
+
+    install_path = os.path.join(
+        config.config.get('local_packages_path'),
+        package_module.name,
+        version,
+        package_module.install_root,
+    )
+
+    environment.init(source_path, build_path, install_path)
+
+    # TODO : Add the ability search for an runner by-package, like the comment below
+    # builder = build_adapter.get_adapter(package)
+    #
+    builder = build_adapter.get_adapter()
+    builder.execute(package_module)
+
+    # The package hopefully is now built. Lets get that context again
+    context = get_context(packages)
+
+    if not context:
+        raise RuntimeError('The package "{packages}" could not be found or built. '.format(packages=packages))
+
+    return runner.execute(context, app_args)
+
+
+def get_runner(system=''):
+    '''Get an runner for the given OS.
 
     Args:
         system (`str`, optional):
@@ -227,10 +307,10 @@ def get_adapter(system=''):
             Default: "".
 
     Raises:
-        NotImplementedError: If the given `system` has no adapter.
+        NotImplementedError: If the given `system` has no runner.
 
     Returns:
-        `BaseAdapter`: The found adapter, if any.
+        `BaseAdapter`: The found runner, if any.
 
     '''
     if not system:
