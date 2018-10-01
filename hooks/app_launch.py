@@ -151,13 +151,7 @@ class BaseAdapter(object):
         if args:
             command += ' {args}'.format(args=args)
 
-        process = context.execute_command(
-            command=command,
-            parent_environ=os.environ.copy(),
-            shell=cls.shell_type,
-            stdin=False,
-            block=False
-        )
+        process = context.execute_command(command)
 
         return_code = process.wait()
         context.print_info(verbosity=True)
