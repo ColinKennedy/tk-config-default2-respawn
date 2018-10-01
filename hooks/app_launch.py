@@ -22,12 +22,18 @@ import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
-# Add `rezzurect`
+# This sys.path.append adds `rezzurect`
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
 sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
-# TODO : Make this build_adapter import more concise (bring to the root folder)
-from rezzurect.build_adapters import build_adapter
+
+# Now we add `rez` so that `rezzurect` can import and use it
+# TODO : Remove this sys.path.append later for something better
+sys.path.append(r'C:\Users\korinkite\rez\Lib\site-packages\rez-2.22.1-py2.7.egg')
+sys.path.append(r'C:\Users\selecaotwo\rez2\Lib\site-packages\rez-2.22.1-py2.7.egg')
+
+# TODO : Make this chooser import more concise (bring to the root folder)
+from rezzurect.adapters import chooser
 from rezzurect import environment
 
 import tank
@@ -40,7 +46,7 @@ ENGINES_TO_PACKAGE = {
     'tk-maya': 'maya',
     'tk-nuke': 'nuke',
 }
-PACKAGE_TO_REZ_PACKAGE = {
+PACKAGE_TO_REZ_REPO = {
     'nuke': 'rez-nuke',
 }
 
@@ -72,8 +78,8 @@ class AppLaunch(tank.Hook):
             self.logger.debug('No rez package was found. The default boot, instead.')
             return install_with_os(runner, app_path, app_args)
 
-        rez_package_name = PACKAGE_TO_REZ_PACKAGE[package]
-        return install_with_rez(rez_package_name, version, runner, app_args)
+        rez_package_name = PACKAGE_TO_REZ_REPO[package]
+        return install_with_rez(rez_package_name, package, version, runner, app_args)
 
 
 class BaseAdapter(object):
@@ -127,24 +133,25 @@ class BaseAdapter(object):
         return ''
 
     @classmethod
-    def execute(cls, context, args):
-        '''Run the context's main command with the given `args`.
+    def execute(cls, package, version, context, args):
+        # '''Run the context's main command with the given `args`.
 
-        Args:
-            context (`rez.resolved_context.ResolvedContext`): The context to run "main".
-            args (str): Every argument to add to the generated command.
+        # Args:
+        #     context (`rez.resolved_context.ResolvedContext`): The context to run "main".
+        #     args (str): Every argument to add to the generated command.
 
-        Returns:
-            dict[str, str or int]: The results of the command's execution.
+        # Returns:
+        #     dict[str, str or int]: The results of the command's execution.
 
-        '''
+        # '''
         # Note: For the package to be valid, it must expose a "main" command.
-        command = 'main'
+        setting_adapter = chooser.get_setting_adapter(package, version)
+        command = setting_adapter.get_executable_command()
 
         if args:
             command += ' {args}'.format(args=args)
 
-        proc = context.execute_shell(
+        process = context.execute_command(
             command=command,
             parent_environ=os.environ.copy(),
             shell=cls.shell_type,
@@ -152,7 +159,7 @@ class BaseAdapter(object):
             block=False
         )
 
-        return_code = proc.wait()
+        return_code = process.wait()
         context.print_info(verbosity=True)
 
         return {
@@ -224,7 +231,7 @@ def install_with_os(runner, app_path, app_args):
     return {'command': command, 'return_code': return_code}
 
 
-def install_with_rez(package, version, runner, app_args):
+def install_with_rez(repo_name, package_name, version, runner, app_args):
     def get_context(packages):
         try:
             return resolved_context.ResolvedContext(packages)
@@ -246,25 +253,25 @@ def install_with_rez(package, version, runner, app_args):
     from rez import exceptions
     from rez import config
 
-    source_path = os.path.join(_REZ_PACKAGE_ROOT, package, version)
+    source_path = os.path.join(_REZ_PACKAGE_ROOT, repo_name, version)
     if not os.path.isdir(source_path):
         raise RuntimeError('Path "{source_path}" could not be found.'.format(source_path=source_path))
 
     try:
         package_module = imp.load_source(
-            'rez_{package}_definition'.format(package=package),
+            'rez_{repo_name}_definition'.format(repo_name=repo_name),
             os.path.join(source_path, 'package.py'),
         )
     except ImportError:
-        raise RuntimeError('install_path "{install_path}" has no package.py file.'.format(
-            install_path=install_path))
+        raise RuntimeError('source_path "{source_path}" has no package.py file.'.format(
+            source_path=source_path))
 
     packages = ['{package_module.name}-{version}'.format(
         package_module=package_module, version=version)]
     context = get_context(packages)
 
     if context:
-        return runner.execute(context, app_args)
+        return runner.execute(package_name, version, context, app_args)
 
     # If we get this far, it means that the context failed to resolve. This
     # happens commonly for 2 reasons
@@ -281,12 +288,9 @@ def install_with_rez(package, version, runner, app_args):
         package_module.install_root,
     )
 
-    environment.init(source_path, build_path, install_path)
+    environment.init(package_name, version, source_path, build_path, install_path)
 
-    # TODO : Add the ability search for an runner by-package, like the comment below
-    # builder = build_adapter.get_adapter(package)
-    #
-    builder = build_adapter.get_adapter()
+    builder = chooser.get_adapter(package_name, version)
     builder.make_package(package_module)
 
     # The package hopefully is now built. Lets get that context again
@@ -295,7 +299,7 @@ def install_with_rez(package, version, runner, app_args):
     if not context:
         raise RuntimeError('The package "{packages}" could not be found or built. '.format(packages=packages))
 
-    return runner.execute(context, app_args)
+    return runner.execute(package_name, version, context, app_args)
 
 
 def get_runner(system=''):
