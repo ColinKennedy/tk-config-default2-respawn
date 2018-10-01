@@ -287,7 +287,7 @@ def install_with_rez(package, version, runner, app_args):
     # builder = build_adapter.get_adapter(package)
     #
     builder = build_adapter.get_adapter()
-    builder.execute(package_module)
+    builder.make_package(package_module)
 
     # The package hopefully is now built. Lets get that context again
     context = get_context(packages)
