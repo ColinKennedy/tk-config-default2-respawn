@@ -14,9 +14,6 @@ import sgtk
 import pprint
 
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
-sys.path.append(r'C:\Users\korinkite\rez\Lib\site-packages\rez-2.22.1-py2.7.egg')
-# TODO : Remove this gross sys.path.append later
-from rez import config
 
 
 class NukeLauncher(SoftwareLauncher):
@@ -132,26 +129,22 @@ class NukeLauncher(SoftwareLauncher):
         :returns: Generator of :class:`SoftwareVersion`.
         """
         # Use Rez to find installed Nuke versions
-        install_search_paths = (
-            config.config.local_packages_path,
-            config.config.release_packages_path,
-        )
+        #
+        # TODO : Find a way to get the root config folder from here?
+        #        a way that is cleaner than running `dirname` over and over
+        #
+        dirname = os.path.dirname
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        config_root = dirname(dirname(dirname(dirname(current_dir))))
 
-        for root in install_search_paths:
-            template = os.path.join(root, 'nuke', '{version}')
-            self.logger.debug("Processing template %s.", template)
+        template = os.path.join(config_root, 'rez_packages', 'rez-nuke', '{version}')
 
-            found_something = False
-            for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
-                self.logger.debug('Processing "{executable}" with tokens "{tokens}".'.format(executable=executable, tokens=tokens))
-                for sw in self._extract_products_from_path(executable, tokens):
-                    found_something = True
-                    yield sw
+        self.logger.debug("Processing template %s.", template)
 
-                if found_something:
-                    # Exit after the first definition has been found to avoid duplicates
-                    return
-                    yield
+        for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
+            self.logger.debug('Processing "{executable}" with tokens "{tokens}".'.format(executable=executable, tokens=tokens))
+            for sw in self._extract_products_from_path(executable, tokens):
+                yield sw
 
     def _extract_products_from_path(self, executable_path, match):
         """
