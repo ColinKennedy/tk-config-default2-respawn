@@ -1,0 +1,3 @@
+[submodule "rezzurect"]
+	path = vendors/rezzurect
+	url = https://korinkite@bitbucket.org/korinkite/rezzurect.git
