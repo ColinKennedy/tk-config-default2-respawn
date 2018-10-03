@@ -76,10 +76,10 @@ class AppLaunch(tank.Hook):
 
         if not package:
             self.logger.debug('No rez package was found. The default boot, instead.')
-            return install_with_os(runner, app_path, app_args)
+            return run_with_os(runner, app_path, app_args)
 
         rez_package_name = PACKAGE_TO_REZ_REPO[package]
-        return install_with_rez(rez_package_name, package, version, runner, app_args)
+        return run_with_rez(rez_package_name, package, version, runner, app_args)
 
 
 class BaseAdapter(object):
@@ -134,16 +134,18 @@ class BaseAdapter(object):
 
     @classmethod
     def execute(cls, package, version, context, args):
-        # '''Run the context's main command with the given `args`.
+        '''Run the context's main command with the given `args`.
 
-        # Args:
-        #     context (`rez.resolved_context.ResolvedContext`): The context to run "main".
-        #     args (str): Every argument to add to the generated command.
+        Args:
+            package (str): The name of the installed Rez package to run.
+            version (str): The specific instance of `package` to run.
+            context (`rez.resolved_context.ResolvedContext`): The context to run "main".
+            args (str): Additional arguments to add to the generated command.
 
-        # Returns:
-        #     dict[str, str or int]: The results of the command's execution.
+        Returns:
+            dict[str, str or int]: The results of the command's execution.
 
-        # '''
+        '''
         # Note: For the package to be valid, it must expose a "main" command.
         setting_adapter = chooser.get_setting_adapter(package, version)
         command = setting_adapter.get_executable_command()
@@ -207,25 +209,50 @@ class WindowsAdapter(BaseAdapter):
 
 
 def _get_config_root_directory():
+    '''str: Get the absolute path of this Shotgun Pipeline configuration.'''
     return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
 def is_config_valid(path):
+    '''bool: Check if the given path is a rezconfig file.'''
     return os.path.isfile(path) and os.stat(path).st_size != 0
 
 
 def init_config():
+    '''Get this Pipeline Configuration's Rez config file and add it.'''
     config_file = get_config_path()
     os.environ['REZ_CONFIG_FILE'] = config_file
 
 
-def install_with_os(runner, app_path, app_args):
+def run_with_os(runner, app_path, app_args):
     command = runner.get_command(app_path, app_args)
     return_code = os.system(command)
     return {'command': command, 'return_code': return_code}
 
 
-def install_with_rez(repo_name, package_name, version, runner, app_args):
+def run_with_rez(repo_name, package_name, version, runner, app_args):
+    '''Execute a repository packages main command.
+
+    Args:
+        repo_name (str):
+            The name of the rez package folder on-disk. This is not necessarily
+            the same name as `package_name` though it can be.
+        package_name (str):
+            The name of the installed rez package. This is the "name"
+            variable defned in `repo_name`/{version}/package.py file.
+        version (str):
+            The specific install of the installed rez package. This is the "version"
+            variable defned in `repo_name`/{version}/package.py file.
+        runner (`BaseAdapter`):
+            The class used to actually run the command in the user's Rez package.
+        app_args (str):
+            Any arguments the application may require
+
+    Raises:
+        EnvironmentError: If the Rez installation could not be found.
+        RuntimeError: If the package could not be built or install.
+
+    '''
     def get_context(packages):
         try:
             return resolved_context.ResolvedContext(packages)
@@ -327,4 +354,5 @@ def get_runner(system=''):
 
 
 def get_config_path():
+    '''str: Get the absolute path to this Pipeline Configuration's Rez config file.'''
     return os.path.join(_get_config_root_directory(), 'rez_packages', '.rezconfig')
