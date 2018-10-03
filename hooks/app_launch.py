@@ -153,7 +153,11 @@ class BaseAdapter(object):
         if args:
             command += ' {args}'.format(args=args)
 
-        process = context.execute_command(command)
+        process = context.execute_shell(
+            command=command,
+            stdin=False,
+            block=False,
+        )
 
         return_code = process.wait()
         context.print_info(verbosity=True)
