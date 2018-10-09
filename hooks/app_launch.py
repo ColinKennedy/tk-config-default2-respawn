@@ -33,6 +33,7 @@ sys.path.append(r'C:\Users\korinkite\rez\Lib\site-packages\rez-2.22.1-py2.7.egg'
 sys.path.append(r'C:\Users\selecaotwo\rez2\Lib\site-packages\rez-2.22.1-py2.7.egg')
 sys.path.append('/home/selecaoone/rez/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg')
 sys.path.append('/home/selecaoone/configs/tk-config-default2/vendors')
+sys.path.append('/home/selecaotwo/rez/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg')
 
 # TODO : Make this chooser import more concise (bring to the root folder)
 from rezzurect.adapters import chooser
