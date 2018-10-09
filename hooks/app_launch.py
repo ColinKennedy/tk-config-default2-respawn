@@ -31,6 +31,8 @@ sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
 # TODO : Remove this sys.path.append later for something better
 sys.path.append(r'C:\Users\korinkite\rez\Lib\site-packages\rez-2.22.1-py2.7.egg')
 sys.path.append(r'C:\Users\selecaotwo\rez2\Lib\site-packages\rez-2.22.1-py2.7.egg')
+sys.path.append('/home/selecaoone/rez/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg')
+sys.path.append('/home/selecaoone/configs/tk-config-default2/vendors')
 
 # TODO : Make this chooser import more concise (bring to the root folder)
 from rezzurect.adapters import chooser
@@ -266,7 +268,9 @@ def run_with_rez(repo_name, package_name, version, runner, app_args):
     try:
         import rez as _  # pylint: disable=W0611
     except ImportError:
-        # If the user doesn't have rez installed properly, try to add it ourselves
+        # If the user doesn't have rez sourced in the PYTHONPATH but it is installed
+        # then lets try to add it ourselves
+        #
         rez_path = runner.get_rez_module_root()
 
         if not rez_path:
@@ -313,10 +317,12 @@ def run_with_rez(repo_name, package_name, version, runner, app_args):
         package_module.install_root,
     )
 
+    # TODO : `environment.init` is needless. It should just be part of the adapter
     environment.init(package_name, version, source_path, build_path, install_path)
 
     builder = chooser.get_adapter(package_name, version)
     builder.make_package(package_module)
+    builder.make_install()
 
     # The package hopefully is now built. Lets get that context again
     context = get_context(packages)
