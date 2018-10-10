@@ -5,5 +5,5 @@
 	path = rez_packages/nuke
 	url = https://korinkite@bitbucket.org/korinkite/rez-nuke.git
 [submodule "rez_packages/rez-nuke-installation"]
-	path = rez_packages/nuke-installation
+	path = rez_packages/nuke_installation
 	url = https://korinkite@bitbucket.org/korinkite/rez-nuke-installation.git
