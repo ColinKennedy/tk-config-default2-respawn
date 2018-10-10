@@ -2,8 +2,8 @@
 	path = vendors/rezzurect
 	url = https://korinkite@bitbucket.org/korinkite/rezzurect.git
 [submodule "rez-nuke"]
-	path = rez_packages/rez-nuke
+	path = rez_packages/nuke
 	url = https://korinkite@bitbucket.org/korinkite/rez-nuke.git
 [submodule "rez_packages/rez-nuke-installation"]
-	path = rez_packages/rez-nuke-installation
+	path = rez_packages/nuke-installation
 	url = https://korinkite@bitbucket.org/korinkite/rez-nuke-installation.git
