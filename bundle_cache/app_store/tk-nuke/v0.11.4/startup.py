@@ -137,7 +137,7 @@ class NukeLauncher(SoftwareLauncher):
         current_dir = os.path.dirname(os.path.realpath(__file__))
         config_root = dirname(dirname(dirname(dirname(current_dir))))
 
-        template = os.path.join(config_root, 'rez_packages', 'rez-nuke', '{version}')
+        template = os.path.join(config_root, 'rez_packages', 'nuke', '{version}')
 
         self.logger.debug("Processing template %s.", template)
 

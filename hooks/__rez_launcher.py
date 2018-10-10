@@ -68,7 +68,7 @@ def get_package_module(source_path, name):
         return
 
 
-def build_context_from_scratch(package, version, source_path):
+def build_context_from_scratch(package, version, root, source_path):
     '''Build the `package` recursively.
 
     Note:
@@ -93,25 +93,24 @@ def build_context_from_scratch(package, version, source_path):
         package.install_root,
     )
 
+    if not os.path.isdir(install_path):
+        os.makedirs(install_path)
+
     # TODO : `environment.init` is needless. It should just be part of the adapter or not at all
     environment.init(package.name, version, source_path, build_path, install_path)
-    raise ValueError((install_path, build_path, source_path))
-    manager.install(package.name, install_path, build_path)
+    manager.install(package.name, root, install_path, version=version)
 
 
-def run_with_rez(repo_name, package_name, version, runner, app_args):
+def run_with_rez(package_name, version, runner, app_args):
     '''Execute a repository packages main command.
 
     Args:
-        repo_name (str):
-            The name of the rez package folder on-disk. This is not necessarily
-            the same name as `package_name` though it can be.
         package_name (str):
             The name of the installed rez package. This is the "name"
-            variable defned in `repo_name`/{version}/package.py file.
+            variable defined in `package_name`/{version}/package.py file.
         version (str):
             The specific install of the installed rez package. This is the "version"
-            variable defned in `repo_name`/{version}/package.py file.
+            variable defined in `package_name`/{version}/package.py file.
         runner (`BaseAdapter`):
             The class used to actually run the command in the user's Rez package.
         app_args (str):
@@ -124,11 +123,11 @@ def run_with_rez(repo_name, package_name, version, runner, app_args):
     '''
     add_rez_to_sys_path_if_needed(runner)
 
-    source_path = os.path.join(_REZ_PACKAGE_ROOT, repo_name, version)
+    source_path = os.path.join(_REZ_PACKAGE_ROOT, package_name, version)
     if not os.path.isdir(source_path):
         raise RuntimeError('Path "{source_path}" could not be found.'.format(source_path=source_path))
 
-    package_module = get_package_module(source_path, repo_name)
+    package_module = get_package_module(source_path, package_name)
 
     if not package_module:
         raise RuntimeError('source_path "{source_path}" has no package.py file.'.format(
@@ -140,7 +139,7 @@ def run_with_rez(repo_name, package_name, version, runner, app_args):
     context = get_context(packages)
 
     if not context:
-        build_context_from_scratch(package_module, version, source_path)
+        build_context_from_scratch(package_module, version, _REZ_PACKAGE_ROOT, source_path)
         context = get_context(packages)
 
     if not context:

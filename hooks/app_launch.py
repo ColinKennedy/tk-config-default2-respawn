@@ -41,9 +41,6 @@ ENGINES_TO_PACKAGE = {
     'tk-maya': 'maya',
     'tk-nuke': 'nuke',
 }
-PACKAGE_TO_REZ_REPO = {
-    'nuke': 'rez-nuke',
-}
 
 
 class AppLaunch(tank.Hook):
@@ -73,8 +70,7 @@ class AppLaunch(tank.Hook):
             self.logger.debug('No rez package was found. The default boot, instead.')
             return run_with_os(runner, app_path, app_args)
 
-        rez_package_name = PACKAGE_TO_REZ_REPO[package]
-        return rez_launcher.run_with_rez(rez_package_name, package, version, runner, app_args)
+        return rez_launcher.run_with_rez(package, version, runner, app_args)
 
 
 def run_with_os(runner, app_path, app_args):
