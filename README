@@ -1,7 +1,14 @@
-Build Steps
-- Attempt to get the package configuration
-- If the context could not resolve then
- - Load the package.py file directly in the original environment location
- - Iterate over the required packages (recursively)
- - Build each package as-needed
+Include Rez as part of the rez packages (so that we make sure that Rez is installed).
+Figure out a way to let app_launch.py use multiple Python file(s).
 
+
+Change "rez-nuke" to just "nuke". It's too confusing having to keep track of
+all the package names vs. their install names
+
+Build Steps
+--- Attempt to get the package configuration
+- If the context could not resolve then
+ --- Load the package.py file directly in the original environment location
+ - Iterate over the required packages (recursively)
+  -? (maybe through the package?)
+ - Build each package as-needed
