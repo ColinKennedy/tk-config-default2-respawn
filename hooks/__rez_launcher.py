@@ -14,6 +14,7 @@ sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
 
 from rezzurect import environment
 
+
 _REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
 
 

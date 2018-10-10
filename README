@@ -1,3 +1,9 @@
+- Figure out how to add yaml as a vendor
+- Also figure out how to add rez (the python package). Very important obviously
+
+- Make sure that Nuke depends upon (and installs) libGLU
+ - Otherwise this happens: "Failed to load libstudio-11.2.3.so: libGLU.so.1: cannot open shared object file: No such file or directory"
+
 Include Rez as part of the rez packages (so that we make sure that Rez is installed).
 Figure out a way to let app_launch.py use multiple Python file(s).
 
