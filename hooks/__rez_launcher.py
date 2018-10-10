@@ -69,36 +69,38 @@ def get_package_module(source_path, name):
 
 
 def build_context_from_scratch(package, version, root, source_path):
-    '''Build the `package` recursively.
+    # '''Build the `package` recursively.
 
-    Note:
-        This function assumes that `package` has not been built before.
-        "Partial" building is not supported and old files will be overwritten.
+    # Note:
+    #     This function assumes that `package` has not been built before.
+    #     "Partial" building is not supported and old files will be overwritten.
 
-    Args:
-        package (str): The name of the Rez package to build.
-        version (str): The specific release of `package` to build.
-        source_path (str): The absolute path to where the package/version files exist.
+    # Args:
+    #     package (str): The name of the Rez package to build.
+    #     version (str): The specific release of `package` to build.
+    #     source_path (str): The absolute path to where the package/version files exist.
 
-    '''
+    # '''
     from rezzurect import manager
     from rez import config
 
+    config_package_root = config.config.get('local_packages_path')
     build_path = os.path.join(source_path, 'build')
 
-    install_path = os.path.join(
-        config.config.get('local_packages_path'),
+    version_path = os.path.join(
+        config_package_root,
         package.name,
         version,
-        package.install_root,
     )
+
+    install_path = os.path.join(version_path, package.install_root)
 
     if not os.path.isdir(install_path):
         os.makedirs(install_path)
 
     # TODO : `environment.init` is needless. It should just be part of the adapter or not at all
     environment.init(package.name, version, source_path, build_path, install_path)
-    manager.install(package.name, root, install_path, version=version)
+    manager.install(package.name, root, config_package_root, version=version)
 
 
 def run_with_rez(package_name, version, runner, app_args):
