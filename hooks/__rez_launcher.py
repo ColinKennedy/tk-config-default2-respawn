@@ -7,14 +7,11 @@ import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
-# This sys.path.append adds `rezzurect`
-_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
-_SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
-sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
-
 from rezzurect import environment
 
 
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
 _REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
 
 

@@ -20,15 +20,9 @@ import imp
 import sys
 import os
 
-# Now we add `rez` so that `rezzurect` can import and use it
-# TODO : Remove this sys.path.append later for something better
-sys.path.append(r'C:\Users\korinkite\rez\Lib\site-packages\rez-2.22.1-py2.7.egg')
-sys.path.append(r'C:\Users\selecaotwo\rez2\Lib\site-packages\rez-2.22.1-py2.7.egg')
-sys.path.append('/home/selecaoone/rez/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg')
-sys.path.append('/home/selecaoone/configs/tk-config-default2/vendors')
-sys.path.append('/home/selecaotwo/rez/lib/python2.7/site-packages/rez-2.22.1-py2.7.egg')
-
+# IMPORT THIRD-PARTY LIBRARIES
 import tank
+
 
 __CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 rez_config = imp.load_source('rez_config', os.path.join(__CURRENT_DIR, '__rez_config.py'))

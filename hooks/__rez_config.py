@@ -3,12 +3,15 @@
 
 # IMPORT STANDARD LIBRARIES
 import tempfile
+import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
-# TODO : Remove this sys.path.append later
-import sys
-sys.path.append('/usr/lib64/python2.7/site-packages')
+# This sys.path.append adds `rezzurect` and any other third-party library that we need
+_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+_SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
+sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
+sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors', 'rez-2.22.1-py2.7.egg'))
 import yaml
 
 
