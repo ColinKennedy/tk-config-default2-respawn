@@ -29,6 +29,7 @@ def add_rez_to_sys_path_if_needed(runner):
         # then lets try to add it ourselves
         #
         rez_path = runner.get_rez_module_root()
+        raise ValueError(('asdfsdf ', rez_path))
 
         if not rez_path:
             raise EnvironmentError('rez is not installed and could not be automatically found. Cannot continue.')

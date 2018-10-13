@@ -38,6 +38,13 @@ def get_config_path():
     return os.path.join(_get_config_root_directory(), 'rez_packages', '.rezconfig')
 
 
+def _resolve_path(key, data):
+    path = data[key]
+    raw_path = path.format(root=_CURRENT_DIR)
+    normalized = os.path.normpath(raw_path)
+    data[key] = normalized
+
+
 def resolve_config_data(path):
     '''Use a base config file to create a "Pipeline-Configuration-aware" config.
 
@@ -54,9 +61,8 @@ def resolve_config_data(path):
     with open(path, 'r') as file_:
         data = yaml.load(file_)
 
-    path = data['package_definition_python_path']
-    raw_path = path.format(root=_CURRENT_DIR)
-    normalized = os.path.normpath(raw_path)
-    data['package_definition_python_path'] = normalized
+    _resolve_path('package_definition_python_path', data)
+    _resolve_path('local_packages_path', data)
+    raise ValueError(data)
 
     return data
