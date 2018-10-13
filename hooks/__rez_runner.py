@@ -6,8 +6,7 @@ import subprocess
 import platform
 
 # IMPORT THIRD-PARTY LIBRARIES
-# TODO : Make this chooser import more concise (bring to the root folder)
-from rezzurect.adapters import chooser
+from rezzurect import chooser
 
 
 class BaseAdapter(object):
