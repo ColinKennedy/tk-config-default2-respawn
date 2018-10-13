@@ -11,6 +11,7 @@ import os
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
 sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
+# TODO : Consider removing this rez*.egg file and having rez manage itself as a package instead
 sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors', 'rez-2.22.1-py2.7.egg'))
 import yaml
 
