@@ -17,7 +17,6 @@ This hook is executed to launch the applications.
 # IMPORT STANDARD LIBRARIES
 import platform
 import imp
-import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
@@ -57,7 +56,11 @@ class AppLaunch(tank.Hook):
         """
         rez_config.init_config()
 
-        package = ENGINES_TO_PACKAGE[engine_name]
+        try:
+            package = ENGINES_TO_PACKAGE[engine_name]
+        except KeyError:
+            package = None
+
         runner = rez_runner.get_runner(platform.system())
 
         if not package:

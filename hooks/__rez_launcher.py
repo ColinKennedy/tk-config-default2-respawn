@@ -1,6 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# TODO: It's entirely possible that Rez is able to do what this module does already.
+#       I just couldn't find any documentation / code that suggested this.
+#       In the future, if a better method is found, feel free to replace this.
+#
+'''The module that is responsible for building and running Rez packages.
+
+This module uses the "package.py" file located in each Rez package definition to
+recursively build the package's requirements.
+
+'''
+
 # IMPORT STANDARD LIBRARIES
 import imp
 import sys
@@ -9,6 +20,7 @@ import os
 # IMPORT THIRD-PARTY LIBRARIES
 from rezzurect import environment
 
+# TODO : Move rez package imports out of functions and up at the top, instead
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
@@ -16,6 +28,20 @@ _REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
 
 
 def _get_context(packages):
+    '''Get a Rez environment that satisfies the given packages, if possible.
+
+    Args:
+        packages (list[str]):
+            All of the packages that must be contained in the context.
+            It can include the name-version of the package
+            or just the package name. Example: ["nuke-11.2v3"] or ["nuke"].
+
+    Returns:
+        `resolved_context.ResolvedContext` or NoneType:
+            The found package countext, assuming `packages`
+            has already been built correctly.
+
+    '''
     from rez import resolved_context
     from rezzurect import manager
 
@@ -67,6 +93,23 @@ def get_package_module(source_path, name):
 
 
 def get_context(packages):
+    '''Get a Rez environment that satisfies the given packages, if possible.
+
+    Args:
+        packages (list[str]):
+            All of the packages that must be contained in the context.
+            It can include the name-version of the package
+            or just the package name. Example: ["nuke-11.2v3"] or ["nuke"].
+
+    Raises:
+        EnvironmentError:
+            If the given packages have one or more missing package.py
+            (which indicates an incomplete package build).
+
+    Returns:
+        `resolved_context.ResolvedContext`: The found package countext.
+
+    '''
     from rez import exceptions
 
     try:
@@ -78,21 +121,25 @@ def get_context(packages):
 
 
 def build_context_from_scratch(package, version, root, source_path):
-    # '''Build the `package` recursively.
+    '''Build the given `package` recursively.
 
-    # Note:
-    #     This function assumes that `package` has not been built before.
-    #     "Partial" building is not supported and old files will be overwritten.
+    Note:
+        This function assumes that `package` has not been built before.
+        "Partial" building is not supported and old files will be overwritten.
 
-    # Args:
-    #     package (str): The name of the Rez package to build.
-    #     version (str): The specific release of `package` to build.
-    #     source_path (str): The absolute path to where the package/version files exist.
+    Args:
+        package (str): The name of the Rez package to build.
+        version (str): The specific release of `package` to build.
+        root (str): The absolute path to where all Rez packages can be found.
+        source_path (str): The absolute path to where the package/version files exist.
 
-    # '''
+    '''
     from rezzurect import manager
     from rez import config
 
+    # TODO : Using `config_package_root` may not work for deployment.
+    #        Double-check this! TD117
+    #
     config_package_root = config.config.get('local_packages_path')
     build_path = os.path.join(source_path, 'build')
 
@@ -104,24 +151,26 @@ def build_context_from_scratch(package, version, root, source_path):
 
     install_path = os.path.join(version_path, package.install_root)
 
+    # TODO : Running makedirs here is not be necessary for every package.
+    #        Consider removing.
+    #
     if not os.path.isdir(install_path):
         os.makedirs(install_path)
 
-    # TODO : `environment.init` is needless. It should just be part of the adapter or not at all
     environment.init(package.name, version, source_path, build_path, install_path)
     manager.install(package.name, root, config_package_root, version=version)
 
 
 def run_with_rez(package_name, version, runner, app_args):
-    '''Execute a repository packages main command.
+    '''Execute a repository package's main command.
 
     Args:
         package_name (str):
             The name of the installed rez package. This is the "name"
-            variable defined in `package_name`/{version}/package.py file.
+            variable defined in `package_name`/`version`/package.py file.
         version (str):
             The specific install of the installed rez package. This is the "version"
-            variable defined in `package_name`/{version}/package.py file.
+            variable defined in `package_name`/`version`/package.py file.
         runner (`BaseAdapter`):
             The class used to actually run the command in the user's Rez package.
         app_args (str):

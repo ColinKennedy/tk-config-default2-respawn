@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+'''A module that helps bootstrap Rez onto Shotgun's Pipeline Configuration.'''
+
 # IMPORT STANDARD LIBRARIES
 import tempfile
 import sys
@@ -25,7 +27,13 @@ def _get_config_root_directory():
 
 
 def init_config():
-    '''Get this Pipeline Configuration's Rez config file and add it.'''
+    '''Get this Pipeline Configuration's Rez config file and add it.
+
+    Important:
+        This is the linchpin that keeps Shotgun and Rez working together.
+        Make changes to this function only if you know what you're doing.
+
+    '''
     data = resolve_config_data(get_config_path())
 
     with tempfile.NamedTemporaryFile(delete=False) as file_:
@@ -41,6 +49,17 @@ def get_config_path():
 
 def resolve_config_data(path):
     '''Use a base config file to create a "Pipeline-Configuration-aware" config.
+
+    Note:
+        Rez requires that the path to the .rezconfig file and all of the paths
+        listed in the .rezconfig file to be hardcoded. Normally that's fine but
+        Shotgun complicates this requirement because, depending on how you source
+        the Pipeline Configuration, it may actually be copied and installed to
+        the user folder.
+
+        Since there's no way to know beforehand which Shotgun sourcing method
+        is being used, we use a fake ".rezconfig" file as a template, fill in its
+        paths as absolute paths, and then source it instead.
 
     Args:
         path (str):
