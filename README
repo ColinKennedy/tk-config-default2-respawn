@@ -1,15 +1,23 @@
-- Figure out how to add yaml as a vendor
+- Get it to work with FTP
+- Get it to work with Houdini
+- Get it to work with Nuke
+ - Confirm link
+ - Confirm internet
+- Figure out deployment
+
+
+- Right now the Nuke package gets a "install" folder built, even though it
+  doesn't use it. Remove it
+
+
 - Also figure out how to add rez (the python package). Very important obviously
 
 - Make sure that Nuke depends upon (and installs) libGLU
  - Otherwise this happens: "Failed to load libstudio-11.2.3.so: libGLU.so.1: cannot open shared object file: No such file or directory"
 
 Include Rez as part of the rez packages (so that we make sure that Rez is installed).
-Figure out a way to let app_launch.py use multiple Python file(s).
 
 
-Change "rez-nuke" to just "nuke". It's too confusing having to keep track of
-all the package names vs. their install names
 
 Build Steps
 --- Attempt to get the package configuration

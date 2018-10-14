@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#
+# -*- coding: utf-8 -*-
 
 # IMPORT STANDARD LIBRARIES
 import subprocess
@@ -93,6 +93,9 @@ class BaseAdapter(object):
             'command': command,
             'return_code': return_code,
         }
+
+    def __repr__(self):
+        return '{obj.__class__.__name__}'.format(obj=self)
 
 
 class LinuxAdapter(BaseAdapter):
