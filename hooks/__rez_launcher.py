@@ -15,6 +15,16 @@ _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
 _REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
 
 
+def _get_context(packages):
+    from rez import resolved_context
+    from rezzurect import manager
+
+    try:
+        return resolved_context.ResolvedContext(packages)
+    except manager.PACKAGE_EXCEPTIONS:
+        return
+
+
 def add_rez_to_sys_path_if_needed(runner):
     '''Make sure that Rez is importable on the user's system.
 
@@ -36,16 +46,6 @@ def add_rez_to_sys_path_if_needed(runner):
         sys.path.append(rez_path)
 
 
-def get_context(packages):
-    from rez import resolved_context
-    from rez import exceptions
-
-    try:
-        return resolved_context.ResolvedContext(packages)
-    except exceptions.PackageFamilyNotFoundError:
-        return
-
-
 def get_package_module(source_path, name):
     '''Import the package.py file as a Python module and return it.
 
@@ -64,6 +64,17 @@ def get_package_module(source_path, name):
         )
     except ImportError:
         return
+
+
+def get_context(packages):
+    from rez import exceptions
+
+    try:
+        return _get_context(packages)
+    except exceptions.PackageDefinitionFileMissing:
+        raise EnvironmentError(
+            'Packages "{packages}" were installed incorrectly. Please contact '
+            'an administrator to fix this.'.format(packages=packages))
 
 
 def build_context_from_scratch(package, version, root, source_path):
