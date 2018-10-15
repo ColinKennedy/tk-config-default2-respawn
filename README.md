@@ -166,6 +166,9 @@ This will hopefully be fixed in the future.
  - Confirm link
  - Confirm internet
 - Find out how to unittest this repo. Shotgun authentication will probably be required...
+- Shotgun forces a build to fail repeatedly even if the original error has been fixed (i.e. retrying a build after deleting a package folder will still fail.)
+ - The only way to make it work again is to exit the Shotgun Project and go back in again. See if there's a way to avoid having to do that
+- rezzurect should still build packages even if they are executed from command-line
 - Figure out deployment
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package!
