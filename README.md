@@ -159,14 +159,19 @@ This will hopefully be fixed in the future.
 
 # Project Checklist (TODO)
 - Make it work in Windows, too
+ - Confirm link
+ - Confirm internet
+ - Confirm TAR extraction works on Windows
 - Get it to work with Nuke
  - Confirm link
  - Confirm internet
 - Figure out deployment
+ - In particular - Recursive deployment of a package should be a "one-button" solution
+ - Make a tool (probably a CLI) that can recursively release a package!
 - Find a way to make it easy to work with a "live production deployment" so
   that users can immediately get updates without restarting their DCC
+- Build a CLI that can "mount" a Rez package environment onto their current terminal session
 - Get it to work with Houdini
-- Make a tool (probably a CLI) that can recursively release a package!
 - Make a tool that can clear a package and install it from scratch (even if it
   is already previously installed)
 - Include Rez as part of the rez packages (so that we make sure that Rez is installed).
