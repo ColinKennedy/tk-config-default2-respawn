@@ -128,14 +128,23 @@ class NukeLauncher(SoftwareLauncher):
 
         :returns: Generator of :class:`SoftwareVersion`.
         """
-        # Certain platforms have more than one location for installed software
-        for template in self.EXECUTABLE_MATCH_TEMPLATES[sys.platform]:
-            self.logger.debug("Processing template %s.", template)
-            # Extract all products from that executable.
-            for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
-                self.logger.debug("Processing %s with tokens %s", executable, tokens)
-                for sw in self._extract_products_from_path(executable, tokens):
-                    yield sw
+        # Use Rez to find installed Nuke versions
+        #
+        # TODO : Find a way to get the root config folder from here?
+        #        a way that is cleaner than running `dirname` over and over
+        #
+        dirname = os.path.dirname
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        config_root = dirname(dirname(dirname(dirname(current_dir))))
+
+        template = os.path.join(config_root, 'rez_packages', 'nuke', '{version}')
+
+        self.logger.debug("Processing template %s.", template)
+
+        for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
+            self.logger.debug('Processing "{executable}" with tokens "{tokens}".'.format(executable=executable, tokens=tokens))
+            for sw in self._extract_products_from_path(executable, tokens):
+                yield sw
 
     def _extract_products_from_path(self, executable_path, match):
         """
