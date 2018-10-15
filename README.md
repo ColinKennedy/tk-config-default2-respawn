@@ -165,6 +165,7 @@ This will hopefully be fixed in the future.
 - Get it to work with Nuke
  - Confirm link
  - Confirm internet
+- Find out how to unittest this repo. Shotgun authentication will probably be required...
 - Figure out deployment
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package!
