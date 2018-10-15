@@ -1,6 +1,6 @@
 [submodule "rezzurect"]
 	path = vendors/rezzurect
-	url = https://korinkite@bitbucket.org/korinkite/rezzurect.git
+	url = https://github.com/ColinKennedy/rezzurect.git
 [submodule "rez-nuke"]
 	path = rez_packages/nuke
 	url = https://korinkite@bitbucket.org/korinkite/rez-nuke.git
