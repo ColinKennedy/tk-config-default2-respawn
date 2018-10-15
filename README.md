@@ -177,8 +177,4 @@ This will hopefully be fixed in the future.
    logic for creating the "main run" command and update `__rez_runner.py` to just
    call "main".
 - Also figure out how to add rez (the python package). Very important obviously
-
-
-# TODO : Using `config_package_root` may not work for deployment.
-#        Double-check this! TD117
-#
+- Using `config_package_root` may not work for deployment. Double-check this TD117
