@@ -141,7 +141,6 @@ def build_context_from_scratch(package, version, root, source_path):
     #        Double-check this! TD117
     #
     config_package_root = config.config.get('local_packages_path')
-    build_path = os.path.join(source_path, 'build')
 
     version_path = os.path.join(
         config_package_root,
@@ -157,7 +156,7 @@ def build_context_from_scratch(package, version, root, source_path):
     if not os.path.isdir(install_path):
         os.makedirs(install_path)
 
-    environment.init(package.name, version, source_path, build_path, install_path)
+    environment.init(source_path, install_path)
     manager.install(package.name, root, config_package_root, version=version)
 
 
