@@ -1,6 +1,3 @@
 [submodule "rezzurect"]
 	path = vendors/rezzurect
 	url = https://github.com/ColinKennedy/rezzurect.git
-[submodule "rez_packages-respawn"]
-	path = rez_packages
-	url = https://github.com/ColinKennedy/rez_packages-respawn.git
