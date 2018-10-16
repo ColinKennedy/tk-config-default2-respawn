@@ -157,19 +157,47 @@ Currently, Rez needs to be installed on people's machines beforehand in order to
 This will hopefully be fixed in the future.
 
 
+# Road Map
+0.2.0
+- Replace all temporary shell (subprocess) commands with Python
+- Confirm Linux support
+ - Nuke "link"
+ - Nuke "internet"
+
+0.3.0
+- Confirm Windows support
+ - Nuke "link"
+ - Nuke "internet"
+ - TAR extraction
+
+0.4.0
+- Change rezzurect adapters so that they can be used from command-line
+  (and not just from Shotgun!)
+- rezzurect should still build packages even if they are executed from command-line
+- Build a CLI that can "mount" a Rez package environment onto their current terminal session
+
+0.5.0
+- Write documentation on deployment
+ - In particular - Recursive deployment of a package should be a "one-button" solution
+ - Make a tool (probably a CLI) that can recursively release a package unless
+   this can be done with Rez out-of-box
+
+0.6.0
+- Get it to work with Houdini
+
+0.7.0
+- Make it so that Rez does not need to be installed onto the user's machine
+  in order for it to be used
+
+
 # Project Checklist (TODO)
-- Make it work in Windows, too
-- Get it to work with Nuke
- - Confirm link
- - Confirm internet
-- Figure out deployment
+- Find out how to unittest this repo. Shotgun authentication will probably be required...
+- Shotgun forces a build to fail repeatedly even if the original error has been fixed (i.e. retrying a build after deleting a package folder will still fail.)
+ - The only way to make it work again is to exit the Shotgun Project and go back in again. See if there's a way to avoid having to do that
 - Find a way to make it easy to work with a "live production deployment" so
   that users can immediately get updates without restarting their DCC
-- Get it to work with Houdini
-- Make a tool (probably a CLI) that can recursively release a package!
 - Make a tool that can clear a package and install it from scratch (even if it
   is already previously installed)
-- Include Rez as part of the rez packages (so that we make sure that Rez is installed).
 - FlexLM licensing R&D
 
 - Make Internet download progress log better
@@ -180,8 +208,4 @@ This will hopefully be fixed in the future.
    logic, replace it with just "main", and then update `__rez_runner.py` to just
    call "main".
 - Also figure out how to add rez (the python package). Very important obviously
-
-
-# TODO : Using `config_package_root` may not work for deployment.
-#        Double-check this! TD117
-#
+- Using `config_package_root` may not work for deployment. Double-check this TD117
