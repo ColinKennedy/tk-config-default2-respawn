@@ -158,12 +158,6 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.2.0
-- Replace all temporary shell (subprocess) commands with Python
-- Confirm Linux support
- - Nuke "link"
- - Nuke "internet"
-
 0.3.0
 - Confirm Windows support
  - Nuke "link"
