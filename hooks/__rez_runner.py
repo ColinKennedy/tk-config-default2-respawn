@@ -70,7 +70,7 @@ class BaseAdapter(object):
             dict[str, str or int]: The results of the command's execution.
 
         '''
-        setting_adapter = chooser.get_setting_adapter(package, version)
+        setting_adapter = chooser.get_setting_adapter(package, version, platform.system())
         command = setting_adapter.get_executable_command()
 
         if args:
