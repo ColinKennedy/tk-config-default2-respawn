@@ -172,9 +172,12 @@ This will hopefully be fixed in the future.
 - Include Rez as part of the rez packages (so that we make sure that Rez is installed).
 - FlexLM licensing R&D
 
+- Make Internet download progress log better
+ - Possibly: https://blog.shichao.io/2012/10/04/progress_speed_indicator_for_urlretrieve_in_python.html
+
 - R&D aliases. Maybe they can be used instead of raw commands? That'd be ideal.
- - If I can get them to work on Windows and Linux, remove all of the adapter
-   logic for creating the "main run" command and update `__rez_runner.py` to just
+ - If I can get them to work on Windows and Linux, remove all of the "setting adapter"
+   logic, replace it with just "main", and then update `__rez_runner.py` to just
    call "main".
 - Also figure out how to add rez (the python package). Very important obviously
 
