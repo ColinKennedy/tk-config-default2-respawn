@@ -158,12 +158,6 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.3.0
-- Confirm Windows support
- - Nuke "link"
- - Nuke "internet"
- - TAR extraction
-
 0.4.0
 - Change rezzurect adapters so that they can be used from command-line
   (and not just from Shotgun!)
