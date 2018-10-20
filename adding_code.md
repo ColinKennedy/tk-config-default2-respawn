@@ -49,38 +49,40 @@ your `env.PYTHONPATH.append` command from before inside of it.
 ```python
 class CommonNukeSettingAdapter(common_setting.BaseAdapter):
 
-	# ... more code
+    # ... more code
 
     def execute(self):
         super(CommonNukeSettingAdapter, self).execute()
-		env.PYTHONPATH.append('~/my_modules')
+
+        env.PYTHONPATH.append('~/my_modules')
 ```
 
 Now if you refresh Shotgun Desktop and load any version of Nuke, you can import
 your `my_tool.py`.
 
 Important:
-	If you want to set paths in different OSes, repeat the same steps but do it
-	in `nuke_setting_{OSTYPE}.py` instead.
-	(Example: Add it to `nuke_setting_windows.py` in the
-	`WindowsNukeSettingAdapter` class, instead.)
+    If you want to set paths in different OSes, repeat the same steps but do it
+    in `nuke_setting_{OSTYPE}.py` instead.
+    (Example: Add it to `nuke_setting_windows.py` in the
+    `WindowsNukeSettingAdapter` class, instead.)
 
 Note:
-	All Rez packages that share code will follow the same folder structure.
-	So if you're ever in-doubt about where to add aliases and environment
-	variables, just check
+    All Rez packages that share code will follow the same folder structure.
+    So if you're ever in-doubt about where to add aliases and environment
+    variables, just look in:
 
-	`{respawn_location}/vendors/rezzurect/adapters/{package}/{package}_setting.py`
+    `{respawn_location}/vendors/rezzurect/adapters/{package}/{package}_setting.py`
 
 
 ### Referencing Code Within The Respawn Configuration
 In Shotgun, Pipeline Configurations can be hosted on-disk or on a git server
-and cloned directly to the user's folder.
+and cloned directly to the user's local machine.
 
 According to [Shotgun's Documentation](https://support.shotgunsoftware.com/hc/en-us/articles/115000067493-Integrations-Admin-Guide),
 if a Pipeline Configuration is cloned, it gets added to the user's local
 directory and given a name automatically.
 
+Root directories by OS:
 ```
 OS X: ~/Library/Caches/Shotgun/<site_name>
 Windows: %APPDATA%\Shotgun\<site_name>
@@ -88,9 +90,9 @@ Linux: ~/.shotgun/<site_name>
 ```
 
 Like the previous example, imagine if we wanted to add `my_tool.py` directly
-into Respawn, into the Shotgun Pipeline Configuration and then add that path
-to PYTHONPATH. How would we do that? Pipeline Configurations can be installed
-basically anywhere so it would be difficult to define the path up-front.
+into the Respawn repo, and then add that path to PYTHONPATH.
+How would we do that? Pipeline Configurations can be installed basically
+anywhere so it would be difficult to define the path up-front.
 
 The answer to this problem is to use Rezzurect.
 
@@ -109,11 +111,11 @@ from ...utils import resolver
 
 class CommonNukeSettingAdapter(common_setting.BaseAdapter):
 
-	# ... more code
+    # ... more code
 
     def execute(self):
         super(CommonNukeSettingAdapter, self).execute()
-		env.PYTHONPATH.append(resolver.expand('{respawn_root}/my_module'))
+        env.PYTHONPATH.append(resolver.expand('{respawn_root}/my_module'))
 ```
 
 The path `'{respawn_root}/my_module'` will consistently expand to wherever your
@@ -165,7 +167,7 @@ to run. This is an example:
 
 ```yaml
 keys:
-	repo_root: /dir/to/repository_a
+    repo_root: /dir/to/repository_a
 ```
 
 ##### Adding Keys With A Pipeline Configuration
@@ -200,7 +202,7 @@ the best thing to do is to make a user .respawnrc like so:
 
 ```yaml
 keys:
-	repo_root: ~/my/dir/to/repository_a
+    repo_root: ~/my/dir/to/repository_a
 ```
 
 And then add it to your user folder:
@@ -223,10 +225,10 @@ The different methods listed above load in the following order (from first to la
 
 Note:
     When keys are loaded, they are "stacked" accumulatively. For example, if a
-	key named "foo" is defined in Shotgun but not defined in ~/.respawnrc,
-	"foo" will still exist. It will just fallback to the Shotgun entry.
+    key named "foo" is defined in Shotgun but not defined in ~/.respawnrc,
+    "foo" will still exist. It will just fallback to the Shotgun entry.
 
-	To delete the "foo" key, you must set `foo: ""` in one of the later loading methods.
+    To delete the "foo" key, you must set `foo: ""` in one of the later loading methods.
 
 
 ### Which Key Method To Use
