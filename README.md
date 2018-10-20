@@ -219,3 +219,13 @@ This part:
 
 Make it so that users can define their own keys and they can also define keys
 which are based on other keys.
+
+Add "Quick checklist" for common operations so that people can see very concise
+summaries of what to do for certain things. Explanations are good but make it
+difficult to reference, later.
+
+- Add a way to automatically add ways to add .respawnrc files
+
+- Create a way to make compound software packages
+ - like "maya and vray1.9"
+ - or "maya and vray >1.9 <2.1"
