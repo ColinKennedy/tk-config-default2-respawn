@@ -159,26 +159,35 @@ This will hopefully be fixed in the future.
 
 # Road Map
 0.4.0
-- Change rezzurect adapters so that they can be used from command-line
-  (and not just from Shotgun!)
-- rezzurect should still build packages even if they are executed from command-line
-- Build a CLI that can "mount" a Rez package environment onto their current terminal session
-
-0.5.0
 - Write documentation on deployment
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package unless
    this can be done with Rez out-of-box
 
-0.6.0
+0.5.0
 - Get it to work with Houdini
 
-0.7.0
+0.6.0
 - Make it so that Rez does not need to be installed onto the user's machine
   in order for it to be used
 
 
 # Project Checklist (TODO)
+- Check to see if aliases work on Windows and Linux
+ - Aliases in Windows don't work on command-line. BUt what about through Python?
+ - And if not, what are "tools" and can I use those?
+- Add Houdini and Maya Support
+- Research rez-release (grok it)
+- Build various ways to ...
+ - Have a config file location in the Configuration which can be used to point
+   to a shared root(s) for Python packages
+ - Look into custom descriptors (or maybe an extra field) so that I can possibly 
+   parse more information, from Shotgun, about package information. That way, 
+   a developer can customize how software resolves and limit software versions
+   without having to make a fork of the configuration!
+   - Or set-able from the configuration file, too
+- Make "trackable" env vars
+ - Once I have a MVP, post on rez-config to see if there is a better way
 - Find out how to unittest this repo. Shotgun authentication will probably be required...
 - Shotgun forces a build to fail repeatedly even if the original error has been fixed (i.e. retrying a build after deleting a package folder will still fail.)
  - The only way to make it work again is to exit the Shotgun Project and go back in again. See if there's a way to avoid having to do that
@@ -197,3 +206,16 @@ This will hopefully be fixed in the future.
    call "main".
 - Also figure out how to add rez (the python package). Very important obviously
 - Using `config_package_root` may not work for deployment. Double-check this TD117
+
+
+## Development Documentation TODO
+These are TODO notes that I thought of while writing docs for Respawn.
+
+This part:
+
+	`{respawn_root}` is a special key that is defined to mean "wherever the top of
+	this Pipeline Configuration is". You can even define your own keys to refer to
+	other locations on-disk
+
+Make it so that users can define their own keys and they can also define keys
+which are based on other keys.
