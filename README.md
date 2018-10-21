@@ -24,32 +24,28 @@ Maya, Nuke, etc.) and be able to get started without fuss or worry.
 Zero-config means that the pipeline should be able to be able
 to initialize, build, and run itself without user intervention.
 
-Where "Auto installation" meant to benefit artists, "Zero-config setup" is
-meant to benefit Pipeline TDs. Software deployment should be painless and
-(ideally) fast. This goal comes from the desire to make deployment simpler
-and relieve tired TDs of traditional, manual deployment processes and put power
-back in their hands.
+Where "Auto installation" is meant to benefit artists, "Zero-config setup" is
+meant to benefit Pipeline TDs. Software deployment should be painless and fast.
+This goal comes from the desire to relieve tired TDs of traditional,
+manual deployment processes and put power back in their hands.
 
 3. Distributable packages
 
 The software provided by this repository should run completely independently
 from what the user has installed locally on their system.
 
-Well-designed Rez packages promise this this functionality but the difference
+Well-designed Rez packages promise this functionality but the difference
 between Respawn and a traditional Rez setup is that the Rez packages can be
 bundled into Respawn directly or it can be referenced from a network location.
-
-Respawn promises that its packages will remain self-contained in order
-to take full advantage of Rez but also allow those packages to be distributed
-as part of Pipeline Configurations.
+The packages can be deployed by Pipeline TDs from command-line or they can be
+automatically installed on-request by the artist.
 
 4. Single-description Rez packages
 
-Rez supports multiple build systems such as cmake and even comes with its own,
-called bez. The bez build system is an interesting option because it has a low
-barrier of entry. That said, bez is not feature-rich and its instructions tend
-to vary greatly per-package. Respawn aims to try to make bez more generic
-and easier to maintain.
+Rez supports multiple build systems such as cmake and custom build commands
+That said, setups tend to vary greatly per-OS and per-package. Respawn aims to
+try to share as much code as possible between packages and keep package
+descriptions generic.
 
 
 # Installation
@@ -178,8 +174,8 @@ This will hopefully be fixed in the future.
 - Build various ways to ...
  - Have a config file location in the Configuration which can be used to point
    to a shared root(s) for Python packages
- - Look into custom descriptors (or maybe an extra field) so that I can possibly 
-   parse more information, from Shotgun, about package information. That way, 
+ - Look into custom descriptors (or maybe an extra field) so that I can possibly
+   parse more information, from Shotgun, about package information. That way,
    a developer can customize how software resolves and limit software versions
    without having to make a fork of the configuration!
    - Or set-able from the configuration file, too

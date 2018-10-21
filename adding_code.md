@@ -176,11 +176,11 @@ Adding keys can be done a number of different ways.
 A .respawnrc file is a JSON or YAML file that defines data which Respawn needs
 to run. Here is an example:
 
-
 ```yaml
 keys:
     repo_root: /dir/to/repository_a
 ```
+
 
 ##### Adding Keys With A Pipeline Configuration
 Add this file to wherever your tk-confid-default2-respawn folder is installed at
