@@ -7,11 +7,8 @@ Respawn is still very early in development but, at its core, it's a
 proof-of-concept based on a google group post about
 [using Shotgun and Rez](https://groups.google.com/forum/#!topic/rez-config/U1wFOH_DHiM).
 
-Together the 3 tools, Shotgun, Rez, and Respawn take on the following roles:
-- Shotgun is used as a distribution mechanism (as is intended)
-- Rez is used to configure and run software in self-described containers
-- Respawn is used to source Rez packages and make them available to the artist
-  automatically. And, where necessary, it can be used to forcibly build Rez packages
+This repository and its submodules are an attempt to provide an "out-of-box"
+way to use Rez with Shotgun with a very minimal setup.
 
 
 ## Project Goals
@@ -19,7 +16,7 @@ Together the 3 tools, Shotgun, Rez, and Respawn take on the following roles:
 
 The process to install this repository as a Pipeline Configuration should be
 kept as simple as possible. In the ideal case, any user with Shotgun Desktop
-installed should be able to log in, press a button to a package (like Houdini,
+installed should be able to log in, press a button to open a package (like Houdini,
 Maya, Nuke, etc.) and be able to get started without fuss or worry.
 
 2. Zero-config setup
@@ -229,3 +226,6 @@ difficult to reference, later.
 - Create a way to make compound software packages
  - like "maya and vray1.9"
  - or "maya and vray >1.9 <2.1"
+
+- Make sure to write a page to explain the "{DCC}_installation" repositories
+  and why they are necessary
