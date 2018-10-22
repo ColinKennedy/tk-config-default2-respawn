@@ -197,3 +197,5 @@ This will hopefully be fixed in the future.
    call "main".
 - Also figure out how to add rez (the python package). Very important obviously
 - Using `config_package_root` may not work for deployment. Double-check this TD117
+
+- Rename the `_LOGGER` in Rezzurect to `LOGGER` again
