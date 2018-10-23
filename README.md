@@ -153,14 +153,20 @@ This will hopefully be fixed in the future.
 # Road Map
 0.4.0
 - Write documentation on deployment
+ - Make any features written in the documentation (that don't already exist)
+
+0.5.0
+- Add Houdini support
+
+0.6.0
+- Add Maya support
+
+0.7.0
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package unless
    this can be done with Rez out-of-box
 
-0.5.0
-- Get it to work with Houdini
-
-0.6.0
+0.8.0
 - Make it so that Rez does not need to be installed onto the user's machine
   in order for it to be used
 
