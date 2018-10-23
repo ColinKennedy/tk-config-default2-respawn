@@ -151,10 +151,6 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.4.0
-- Write documentation on deployment
- - Make any features written in the documentation (that don't already exist)
-
 0.5.0
 - Add Houdini support
 
