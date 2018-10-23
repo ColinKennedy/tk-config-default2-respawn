@@ -223,5 +223,13 @@ difficult to reference, later.
  - like "maya and vray1.9"
  - or "maya and vray >1.9 <2.1"
 
-- Make sure to write a page to explain the "{DCC}_installation" repositories
+- Make sure to write a page to explain the `"{DCC}_installation"` repositories
   and why they are necessary
+
+
+- Make a "How Stuff Works" section that explains why things work the way they
+  do
+  - explain how REZCONFIG_FILE env var is hacked to get relative pipeline
+	configuration root
+  - explain how `ressurect.utils.resolver` passes information to the
+	executing context as environment variables

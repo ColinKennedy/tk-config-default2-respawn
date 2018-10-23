@@ -12,7 +12,8 @@ touch ~/my_modules/my_tool.py
 Go to `{respawn_location}/rez_packages/nuke/11.2v3/package.py` and add
 `env.PYTHONPATH.append('~/my_modules')` to the "commands" function.
 
-Re-build the "nuke" packge by removing your `~/packages/nuke` folder (Why `~/packages/nuke`? See [Local Package Installs](https://github.com/nerdvegas/rez/wiki/Building-Packages#local-package-installs)),
+Re-build the "nuke" packge by removing your `~/packages/nuke` folder
+(Why `~/packages/nuke`? See [Local Package Installs](https://github.com/nerdvegas/rez/wiki/Building-Packages#local-package-installs)),
 opening Shotgun Desktop, and clicking the Nuke icon. Once Nuke is loaded,
 you can now run this Python command in the Script Editor.
 
@@ -22,7 +23,7 @@ import my_tool
 
 And that's all there is to it. The rest of this page will go over different
 strategies to make appending environment variables easier but they're by no
-means "required" to use Respawn.
+means "required" to start appending paths to your packages immediately.
 
 
 ### Adding To Multiple Package Versions At Once
@@ -43,7 +44,7 @@ To do this, open
 `{respawn_location}/vendors/rezzurect/adapters/nuke/nuke_setting.py`
 
 In there is a single class called "CommonNukeSettingAdapter". Add the same
-your `env.PYTHONPATH.append` command from before inside of it.
+`env.PYTHONPATH.append` command from before inside of it.
 
 
 ```python
@@ -62,9 +63,9 @@ and load any version of Nuke, you can import your `my_tool.py`.
 
 Note:
     The reason why we have to delete installed packages whenever we make
-    changes to Rezzurect is because Rez packages are only built if they
+    changes to Rezzurect is because Respawn will only build Rez packages if they
 	are not already installed. When a Rez package is built, Rezzurect gets
-	copied to placed into it so that the Rez package can stay self-contained.
+	copied placed into it so that the Rez package can stay self-contained.
 
     This is recommended for releasing and distributing packages but it
 	can be a bit frustrating for developers. For temporary changes or development,
@@ -113,7 +114,7 @@ Pretend `my_tool.py` was located at:
 `{tk-config-default2-respawn}/my_module/my_tool.py`
 
 To make sure we get the correct path no matter how the Pipeline Configuration
-is sourced, we'll use the same syntax as before but also include a
+is cloned on-disk, we'll use the same syntax as before but also include a
 fancy command that Rezzurect comes with.
 
 ```python
@@ -146,8 +147,8 @@ multiple packages at once.
 We also have a way to add paths to files that are located inside of the
 Pipeline Configuration, using keys.
 
-But keys can be used for more than just referring to the Pipeline
-Configuration. You can use it to refer to other places on-disk.
+But keys can be used for more than just referring to locations in your Pipeline
+Configuration. You can use it to refer to anywhere on-disk.
 This is extremely useful for developers, specifically.
 
 Say for example you have a repository called `repository_a`. Multiple shows use
@@ -156,20 +157,23 @@ need to make some changes to it. To avoid working directly with
 `/dir/to/repository_a` which is live-code, you clone a copy of `repository_a`
 someplace else, like `~/my/dir/to/repository_a`.
 
-If `/dir/to/repository_a` was hard-coded into all of your Rez package.py files, as `env.PYTHONPATH.append('/dir/to/repository_a')` then you'd now
+If `/dir/to/repository_a` was hard-coded into all of your Rez package.py files,
+as `env.PYTHONPATH.append('/dir/to/repository_a')` then you'd now
 have to search-and-replace that string and change it to `~/my/dir/to/repository_a`.
 
-Obviously that's a huge time-sink and is likely to introduce bugs.
+Obviously that's a huge time-sink and a lot to keep track of.
 
-But if you use instead of a key, like
-`env.PYTHONPATH.append(resolver.expand('{repo_root}'))`
-then all you have to do is change where `'{repo_root}'` points to.
+But if you use a key instead, like `env.PYTHONPATH.append(resolver.expand('{a_root}'))`
+then all you have to do is change where `'{a_root}'` points to.
 
 So how do you add your own key?
 
 
 #### Adding Custom Keys
-Adding keys can be done a number of different ways.
+Adding and managing keys can be done a number of different ways.
+
+You can set keys from the Shotgun Web App, include them directly inside of your
+Pipeline Configuration, or set keys only for your user.
 
 
 ##### From a .respawnrc file
@@ -178,27 +182,28 @@ to run. Here is an example:
 
 ```yaml
 keys:
-    repo_root: /dir/to/repository_a
+    a_root: /dir/to/repository_a
 ```
 
 
 ##### Adding Keys With A Pipeline Configuration
-Add this file to wherever your tk-confid-default2-respawn folder is installed at
-`{respawn_location}/.respawnrc` and the key is now defined for that Pipeline
-Configuration.
+Add the .respawnrc file to wherever your tk-confid-default2-respawn folder
+is installed at `{respawn_location}/.respawnrc` and the key is now defined
+for that Pipeline Configuration.
 
 
 ##### Adding Keys With Shotgun
 The .respawnrc config file is simple and convenient but it has a major flaw.
-If you need to distribute a beta, you'd have to copy all of Respawn just to change that one path in the .respawnrc file to the new, beta location.
-That's obviously very wasteful of disk-space and can get confusing.
+If you need to distribute a beta, you'd have to make a complete copy of Respawn
+just to change maybe one or two paths in the .respawnrc file to the
+new beta location.
 
-To counter that, Respawn can also use Shotgun to find keys.
+To avoid having to do that, Respawn lets you add keys from the Shotgun Web App.
 
 Setup:
 1. Create a dict, write in all your keys, and then convert it into a JSON string
 2. Add a new Field to the Pipeline Configuration Entity and call it "respawn_keys"
-3. Paste in your JSON string into "respawn_keys".
+3. Paste in your JSON string into its "respawn_keys" Field.
 
 Now you can create multiple Pipeline Configurations that use the same
 repository but have them point to completely different code-bases, right from the Shotgun
@@ -208,11 +213,11 @@ Web App.
 ##### Adding Keys With A User File
 If you are running or building Rez packages from command-line, you won't have a
 Shotgun Toolkit context to be able to get your keys. In these circumstances,
-the best thing to do is to make a user .respawnrc like so:
+the best thing to do is to make a .respawnrc like so:
 
 ```yaml
 keys:
-    repo_root: ~/my/dir/to/repository_a
+    a_root: ~/my/dir/to/repository_a
 ```
 
 And then add it to your user folder:
