@@ -7,11 +7,8 @@ Respawn is still very early in development but, at its core, it's a
 proof-of-concept based on a google group post about
 [using Shotgun and Rez](https://groups.google.com/forum/#!topic/rez-config/U1wFOH_DHiM).
 
-Together the 3 tools, Shotgun, Rez, and Respawn take on the following roles:
-- Shotgun is used as a distribution mechanism (as is intended)
-- Rez is used to configure and run software in self-described containers
-- Respawn is used to source Rez packages and make them available to the artist
-  automatically. And, where necessary, it can be used to forcibly build Rez packages
+This repository and its submodules are an attempt to provide an "out-of-box"
+way to use Rez with Shotgun with a very minimal setup.
 
 
 ## Project Goals
@@ -19,7 +16,7 @@ Together the 3 tools, Shotgun, Rez, and Respawn take on the following roles:
 
 The process to install this repository as a Pipeline Configuration should be
 kept as simple as possible. In the ideal case, any user with Shotgun Desktop
-installed should be able to log in, press a button to a package (like Houdini,
+installed should be able to log in, press a button to open a package (like Houdini,
 Maya, Nuke, etc.) and be able to get started without fuss or worry.
 
 2. Zero-config setup
@@ -27,32 +24,28 @@ Maya, Nuke, etc.) and be able to get started without fuss or worry.
 Zero-config means that the pipeline should be able to be able
 to initialize, build, and run itself without user intervention.
 
-Where "Auto installation" meant to benefit artists, "Zero-config setup" is
-meant to benefit Pipeline TDs. Software deployment should be painless and
-(ideally) fast. This goal comes from the desire to make deployment simpler
-and relieve tired TDs of traditional, manual deployment processes and put power
-back in their hands.
+Where "Auto installation" is meant to benefit artists, "Zero-config setup" is
+meant to benefit Pipeline TDs. Software deployment should be painless and fast.
+This goal comes from the desire to relieve tired TDs of traditional,
+manual deployment processes and put power back in their hands.
 
 3. Distributable packages
 
 The software provided by this repository should run completely independently
 from what the user has installed locally on their system.
 
-Well-designed Rez packages promise this this functionality but the difference
+Well-designed Rez packages promise this functionality but the difference
 between Respawn and a traditional Rez setup is that the Rez packages can be
 bundled into Respawn directly or it can be referenced from a network location.
-
-Respawn promises that its packages will remain self-contained in order
-to take full advantage of Rez but also allow those packages to be distributed
-as part of Pipeline Configurations.
+The packages can be deployed by Pipeline TDs from command-line or they can be
+automatically installed on-request by the artist.
 
 4. Single-description Rez packages
 
-Rez supports multiple build systems such as cmake and even comes with its own,
-called bez. The bez build system is an interesting option because it has a low
-barrier of entry. That said, bez is not feature-rich and its instructions tend
-to vary greatly per-package. Respawn aims to try to make bez more generic
-and easier to maintain.
+Rez supports multiple build systems such as cmake and custom build commands
+That said, setups tend to vary greatly per-OS and per-package. Respawn aims to
+try to share as much code as possible between packages and keep package
+descriptions generic.
 
 
 # Installation
@@ -158,27 +151,38 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.4.0
-- Change rezzurect adapters so that they can be used from command-line
-  (and not just from Shotgun!)
-- rezzurect should still build packages even if they are executed from command-line
-- Build a CLI that can "mount" a Rez package environment onto their current terminal session
-
 0.5.0
-- Write documentation on deployment
+- Add Houdini support
+
+0.6.0
+- Add Maya support
+
+0.7.0
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package unless
    this can be done with Rez out-of-box
 
-0.6.0
-- Get it to work with Houdini
-
-0.7.0
+0.8.0
 - Make it so that Rez does not need to be installed onto the user's machine
   in order for it to be used
 
 
 # Project Checklist (TODO)
+- Check to see if aliases work on Windows and Linux
+ - Aliases in Windows don't work on command-line. BUt what about through Python?
+ - And if not, what are "tools" and can I use those?
+- Add Houdini and Maya Support
+- Research rez-release (grok it)
+- Build various ways to ...
+ - Have a config file location in the Configuration which can be used to point
+   to a shared root(s) for Python packages
+ - Look into custom descriptors (or maybe an extra field) so that I can possibly
+   parse more information, from Shotgun, about package information. That way,
+   a developer can customize how software resolves and limit software versions
+   without having to make a fork of the configuration!
+   - Or set-able from the configuration file, too
+- Make "trackable" env vars
+ - Once I have a MVP, post on rez-config to see if there is a better way
 - Find out how to unittest this repo. Shotgun authentication will probably be required...
 - Shotgun forces a build to fail repeatedly even if the original error has been fixed (i.e. retrying a build after deleting a package folder will still fail.)
  - The only way to make it work again is to exit the Shotgun Project and go back in again. See if there's a way to avoid having to do that
@@ -198,4 +202,36 @@ This will hopefully be fixed in the future.
 - Also figure out how to add rez (the python package). Very important obviously
 - Using `config_package_root` may not work for deployment. Double-check this TD117
 
-- Rename the `_LOGGER` in Rezzurect to `LOGGER` again
+
+## Development Documentation TODO
+These are TODO notes that I thought of while writing docs for Respawn.
+
+This part:
+
+	`{respawn_root}` is a special key that is defined to mean "wherever the top of
+	this Pipeline Configuration is". You can even define your own keys to refer to
+	other locations on-disk
+
+Make it so that users can define their own keys and they can also define keys
+which are based on other keys.
+
+Add "Quick checklist" for common operations so that people can see very concise
+summaries of what to do for certain things. Explanations are good but make it
+difficult to reference, later.
+
+- Add a way to automatically add ways to add .respawnrc files
+
+- Create a way to make compound software packages
+ - like "maya and vray1.9"
+ - or "maya and vray >1.9 <2.1"
+
+- Make sure to write a page to explain the `"{DCC}_installation"` repositories
+  and why they are necessary
+
+
+- Make a "How Stuff Works" section that explains why things work the way they
+  do
+  - explain how REZCONFIG_FILE env var is hacked to get relative pipeline
+	configuration root
+  - explain how `ressurect.utils.resolver` passes information to the
+	executing context as environment variables

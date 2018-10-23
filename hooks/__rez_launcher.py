@@ -13,6 +13,7 @@ recursively build the package's requirements.
 '''
 
 # IMPORT STANDARD LIBRARIES
+import logging
 import imp
 import sys
 import os
@@ -25,6 +26,7 @@ from rezzurect import environment
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
 _REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
+LOGGER = logging.getLogger('rezzurect.rez_launcher')
 
 
 def _get_context(packages):
@@ -198,6 +200,7 @@ def run_with_rez(package_name, version, runner, app_args):
     context = get_context(packages)
 
     if not context:
+        LOGGER.info('Package "%s" was not found. Attempting to build from scratch now.', packages)
         build_context_from_scratch(package_module, version, _REZ_PACKAGE_ROOT, source_path)
         context = get_context(packages)
 
