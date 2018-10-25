@@ -32,6 +32,9 @@
    call "main".
 - Also figure out how to add rez (the python package). Very important obviously
 - Using `config_package_root` may not work for deployment. Double-check this TD117
+- Remove the need to pip install rez!!!
+- Once SideFX support gets back to me about how to download Houdini 17+, add
+  that to the houdini Rez packages
 
 
 ## Development Documentation TODO
