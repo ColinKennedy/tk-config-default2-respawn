@@ -35,6 +35,8 @@
 - Remove the need to pip install rez!!!
 - Once SideFX support gets back to me about how to download Houdini 17+, add
   that to the houdini Rez packages
+- Re-enable Houdini "internet" strategy
+- Make sure that variant packages (houdiniFX, nukeX, hiero, etc) work.
 
 
 ## Development Documentation TODO
