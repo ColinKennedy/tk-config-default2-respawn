@@ -161,56 +161,35 @@ class HoudiniLauncher(SoftwareLauncher):
         # use the bundled engine icon
         icon_path = os.path.join(
             self.disk_location,
-            "icon_256.png"
+            'icon_256.png'
         )
-        self.logger.debug("Using icon path: %s" % (icon_path,))
 
-        # all the executable templates for the current OS
-        executable_templates = self.EXECUTABLE_TEMPLATES.get(sys.platform, [])
+        self.logger.debug('Using icon path "%s".', icon_path)
 
-        # all the discovered executables
-        sw_versions = []
+        # Use Rez to find installed Nuke versions
+        #
+        # TODO : Find a way to get the root config folder from here?
+        #        a way that is cleaner than running `dirname` over and over
+        #
+        dirname = os.path.dirname
+        current_dir = os.path.dirname(os.path.realpath(__file__))
+        config_root = dirname(dirname(dirname(dirname(current_dir))))
 
-        for executable_template in executable_templates:
+        template = os.path.join(config_root, 'rez_packages', 'houdini', '{version}')
 
-            self.logger.debug("Processing template %s.", executable_template)
+        self.logger.debug("Processing template %s.", template)
 
-            executable_matches = self._glob_and_match(
-                executable_template,
-                self.COMPONENT_REGEX_LOOKUP
-            )
+        for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
+            self.logger.debug('Processing "%s" with tokens "%s".', executable, tokens)
 
-            # Extract all products from that executable.
-            for (executable_path, key_dict) in executable_matches:
+            # extract the matched keys form the key_dict (default to None if
+            # not included)
+            executable_version = tokens.get('version')
 
-                # extract the matched keys form the key_dict (default to None if
-                # not included)
-                executable_version = key_dict.get("version")
-                executable_product = key_dict.get("product")
-                executable_name = key_dict.get("executable")
-
-                # we need a product to match against. If that isn't provided,
-                # then an executable name should be available. We can map that
-                # to the proper product.
-                if not executable_product:
-                    executable_product = \
-                        self.EXECUTABLE_TO_PRODUCT.get(executable_name)
-
-                # only include the products that are covered in the EXECUTABLE_TO_PRODUCT dict
-                if executable_product is None or executable_product not in self.EXECUTABLE_TO_PRODUCT.values():
-                    self.logger.debug(
-                        "Product '%s' is unrecognized. Skipping." %
-                        (executable_product,)
-                    )
-                    continue
-
-                sw_versions.append(
-                    SoftwareVersion(
-                        executable_version,
-                        executable_product,
-                        executable_path,
-                        icon_path
-                    )
+            for product in ['Houdini', 'Houdini FX', 'Houdini Core']:
+                yield SoftwareVersion(
+                    executable_version,
+                    product,
+                    '',  # We don't need to provide an executable path. Rez will do it for us
+                    icon_path
                 )
-
-        return sw_versions
