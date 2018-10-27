@@ -37,6 +37,8 @@
  - No includes
  - No bez - use custom build commands
 
+- alphabetize all the rez package global variables
+
 
 ## Development Documentation TODO
 These are TODO notes that I thought of while writing docs for Respawn.
