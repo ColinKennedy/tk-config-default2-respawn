@@ -33,6 +33,10 @@
 - Also figure out how to add rez (the python package). Very important obviously
 - Using `config_package_root` may not work for deployment. Double-check this TD117
 
+- Make sure every package is up-to-date
+ - No includes
+ - No bez - use custom build commands
+
 
 ## Development Documentation TODO
 These are TODO notes that I thought of while writing docs for Respawn.
