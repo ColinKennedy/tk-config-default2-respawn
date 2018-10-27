@@ -151,17 +151,20 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.5.0
-- Add Houdini support
-
 0.6.0
-- Add Maya support
+- Add a standard for user-configuration
+- Change this pipeline configuration to let the user look for packages from a
+  filepath
 
 0.7.0
+- Add Maya support
+- Add Houdini-Windows support
+
+0.8.0
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package unless
    this can be done with Rez out-of-box
 
-0.8.0
+0.9.0
 - Make it so that Rez does not need to be installed onto the user's machine
   in order for it to be used
