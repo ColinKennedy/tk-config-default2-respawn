@@ -112,11 +112,11 @@ def get_context(packages):
         `resolved_context.ResolvedContext`: The found package countext.
 
     '''
-    from rez import exceptions
+    from rezzurect import manager
 
     try:
         return _get_context(packages)
-    except exceptions.PackageDefinitionFileMissing:
+    except manager.PACKAGE_EXCEPTIONS:
         raise EnvironmentError(
             'Packages "{packages}" were installed incorrectly. Please contact '
             'an administrator to fix this.'.format(packages=packages))

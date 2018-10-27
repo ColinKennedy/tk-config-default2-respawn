@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+# TODO : "__rez_launcher" and "__rez_runner" are too similar. change one
 '''A module which is used to abstract Rez so it can work across different OSes.'''
 
 # IMPORT STANDARD LIBRARIES

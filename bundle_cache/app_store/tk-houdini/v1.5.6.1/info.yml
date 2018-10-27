@@ -1,0 +1,97 @@
+# Copyright (c) 2013 Shotgun Software Inc.
+# 
+# CONFIDENTIAL AND PROPRIETARY
+# 
+# This work is provided "AS IS" and subject to the Shotgun Pipeline Toolkit 
+# Source Code License included in this distribution package. See LICENSE.
+# By accessing, using, copying or modifying this work you indicate your 
+# agreement to the Shotgun Pipeline Toolkit Source Code License. All rights 
+# not expressly granted therein are reserved by Shotgun Software Inc.
+
+# Metadata defining the behaviour and requirements for this engine
+
+
+# expected fields in the configuration file for this engine
+configuration:
+
+    automatic_context_switch:
+        type: bool
+        description: "Controls whether toolkit should attempt to automatically adjust its
+                     context every time the currently loaded file changes. Defaults to True."
+        default_value: True
+
+    enable_sg_menu:
+        type: bool
+        description: "Controls whether a menu will be built with commands
+                     registered by the installed apps. It is not currently
+                     possible to rebuild the menu on a Shotgun context switch,
+                     so this option allows for the menu to be disabled in
+                     favor of the Shotgun shelf which can be rebuilt
+                     dynamically."
+        default_value: true
+
+    enable_sg_shelf:
+        type: bool
+        description: "Controls whether a shelf will be built with commands
+                     registered by the installed apps. The shelf will be 
+                     rebuilt dynamically as the Shotgun context changes."
+        default_value: true
+
+    debug_logging:
+        type: bool
+        description: Controls whether debug messages should be emitted to the logger
+        default_value: false
+
+    menu_favourites:
+        type: list
+        description: "Controls the favourites section on the main menu. This is a list
+                     and each menu item is a dictionary with keys app_instance and name.
+                     The app_instance parameter connects this entry to a particular
+                     app instance defined in the environment configuration file. The name
+                     is a menu name to make a favourite."
+        allows_empty: True
+        values:
+            type: dict
+            items:
+                name: { type: str }
+                app_instance: { type: str }
+
+    launch_builtin_plugins:
+        type: list
+        description: "Comma-separated list of tk-houdini plugins to load when
+                     launching Houdini. Use of this feature disables the classic
+                     mechanism for bootstrapping Toolkit when Houdini is
+                     launched."
+        allows_empty: True
+        default_value: []
+        values:
+            type: str
+
+    run_at_startup:
+        type: list
+        description: "Controls what apps will run on startup.  This is a list
+                     where each element is a dictionary with two keys:
+                     'app_instance' and 'name'.  The app_instance value connects
+                     this entry to a particular app instance defined in the
+                     environment configuration file.  The name is the menu name
+                     of the command to run when the Houdini engine starts up. If
+                     name is '' then all commands from the given app instance
+                     are started."
+        allows_empty: True
+        default_value: []
+        values:
+            type: dict
+            items:
+                name: { type: str }
+                app_instance: { type: str }
+
+# the Shotgun fields that this engine needs in order to operate correctly
+requires_shotgun_fields:
+
+# More verbose description of this item
+display_name: "Shotgun Engine for Houdini"
+description: "Shotgun Pipeline Toolkit integration in Houdini"
+
+# Required minimum versions for this item to run
+requires_shotgun_version:
+requires_core_version: "v0.18.45"
