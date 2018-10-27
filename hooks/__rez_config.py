@@ -12,9 +12,15 @@ import os
 # This sys.path.append adds `rezzurect` and any other third-party library that we need
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
-sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors'))
+_VENDORS_PATH = os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors')
 # TODO : Consider removing this rez*.egg file and having rez manage itself as a package instead
-sys.path.append(os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors', 'rez-2.23.1-py2.7.egg'))
+_REZ_PYTHON_PACKAGE_PATH = os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7.egg')
+sys.path.append(_VENDORS_PATH)
+sys.path.append(_REZ_PYTHON_PACKAGE_PATH)
+
+_MANAGED_PACKAGES = (os.pathsep).join([_REZ_PYTHON_PACKAGE_PATH, _VENDORS_PATH])
+os.environ['PYTHONPATH'] += os.pathsep + _MANAGED_PACKAGES
+os.environ['RESPAWN_PYTHONPATH'] = _MANAGED_PACKAGES
 import yaml
 
 
