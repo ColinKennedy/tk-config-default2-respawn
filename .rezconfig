@@ -1,0 +1,2 @@
+# local_packages_path: /some/other/path/to/install/packages
+package_definition_python_path: "{root}/../vendors"

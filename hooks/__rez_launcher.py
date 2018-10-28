@@ -19,13 +19,13 @@ import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
+from rezzurect.utils import rezzurect_config
 from rezzurect import environment
 
 # TODO : Move rez package imports out of functions and up at the top, instead
 
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
-_REZ_PACKAGE_ROOT = os.path.join(_SHOTGUN_CONFIG_ROOT, 'rez_packages')
 LOGGER = logging.getLogger('rezzurect.rez_launcher')
 
 
@@ -136,6 +136,7 @@ def build_context_from_scratch(package, version, root, source_path):
         source_path (str): The absolute path to where the package/version files exist.
 
     '''
+    from rezzurect.utils import rezzurect_config
     from rezzurect import manager
     from rez import config
 
@@ -150,7 +151,7 @@ def build_context_from_scratch(package, version, root, source_path):
         version,
     )
 
-    install_path = os.path.join(version_path, package.install_root)
+    install_path = os.path.join(version_path, rezzurect_config.INSTALL_FOLDER_NAME)
 
     # TODO : Running makedirs here is not be necessary for every package.
     #        Consider removing.
@@ -184,7 +185,12 @@ def run_with_rez(package_name, version, runner, app_args):
     '''
     add_rez_to_sys_path_if_needed(runner)
 
-    source_path = os.path.join(_REZ_PACKAGE_ROOT, package_name, version)
+    source_path = os.path.join(
+        rezzurect_config.REZ_PACKAGE_ROOT_FOLDER,
+        package_name,
+        version,
+    )
+
     if not os.path.isdir(source_path):
         raise RuntimeError('Path "{source_path}" could not be found.'.format(source_path=source_path))
 
@@ -201,7 +207,12 @@ def run_with_rez(package_name, version, runner, app_args):
 
     if not context:
         LOGGER.info('Package "%s" was not found. Attempting to build from scratch now.', packages)
-        build_context_from_scratch(package_module, version, _REZ_PACKAGE_ROOT, source_path)
+        build_context_from_scratch(
+            package_module,
+            version,
+            rezzurect_config.REZ_PACKAGE_ROOT_FOLDER,
+            source_path,
+        )
         context = get_context(packages)
 
     if not context:

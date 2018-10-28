@@ -151,11 +151,6 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.6.0
-- Add a standard for user-configuration
-- Change this pipeline configuration to let the user look for packages from a
-  filepath
-
 0.7.0
 - Add Maya support
 - Add Houdini-Windows support

@@ -13,6 +13,9 @@ import sys
 import sgtk
 import pprint
 
+sys.path.append('/home/selecaoone/configs/tk-config-default2-respawn/vendors')
+sys.path.append('/home/selecaoone/configs/tk-config-default2-respawn/vendors/rez-2.23.1-py2.7')
+from rezzurect.utils import rezzurect_config
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
 
@@ -129,15 +132,7 @@ class NukeLauncher(SoftwareLauncher):
         :returns: Generator of :class:`SoftwareVersion`.
         """
         # Use Rez to find installed Nuke versions
-        #
-        # TODO : Find a way to get the root config folder from here?
-        #        a way that is cleaner than running `dirname` over and over
-        #
-        dirname = os.path.dirname
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        config_root = dirname(dirname(dirname(dirname(current_dir))))
-
-        template = os.path.join(config_root, 'rez_packages', 'nuke', '{version}')
+        template = os.path.join(rezzurect_config.REZ_PACKAGE_ROOT_FOLDER, 'nuke', '{version}')
 
         self.logger.debug("Processing template %s.", template)
 
