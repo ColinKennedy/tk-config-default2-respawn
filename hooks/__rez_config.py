@@ -9,22 +9,18 @@ import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
-# This sys.path.append adds `rezzurect` and any other third-party library that we need
 _CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
 _SHOTGUN_CONFIG_ROOT = os.path.dirname(_CURRENT_DIR)
 _VENDORS_PATH = os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors')
-# TODO : Consider removing this rez*.egg file and having rez manage itself as a package instead
-_REZ_PYTHON_PACKAGE_PATH = os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7.egg')
+# This sys.path.append adds `rezzurect` and any other third-party library that we need
 sys.path.append(_VENDORS_PATH)
-sys.path.append(_REZ_PYTHON_PACKAGE_PATH)
+sys.path.append(os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7'))
 
-_MANAGED_PACKAGES = (os.pathsep).join([_REZ_PYTHON_PACKAGE_PATH, _VENDORS_PATH])
-os.environ['PYTHONPATH'] += os.pathsep + _MANAGED_PACKAGES
-os.environ['RESPAWN_PYTHONPATH'] = _MANAGED_PACKAGES
+from rezzurect.utils import rezzurect_config
 import yaml
 
 
-_CURRENT_DIR = os.path.dirname(os.path.realpath(__file__))
+rezzurect_config.init_custom_pythonpath()
 
 
 def _get_config_root_directory():
@@ -32,6 +28,9 @@ def _get_config_root_directory():
     return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
+# TODO : Make it so that, if REZ_CONFIG_FILE is not defined, we define it
+#        but use it if it IS defined
+#
 def init_config():
     '''Get this Pipeline Configuration's Rez config file and add it.
 
@@ -50,7 +49,7 @@ def init_config():
 
 def get_config_path():
     '''str: Get the absolute path to this Pipeline Configuration's Rez config file.'''
-    return os.path.join(_get_config_root_directory(), 'rez_packages', '.rezconfig')
+    return os.path.join(_get_config_root_directory(), '.rezconfig')
 
 
 def resolve_config_data(path):
