@@ -12,6 +12,9 @@ import os
 import sys
 
 import sgtk
+sys.path.append('/home/selecaoone/configs/tk-config-default2-respawn/vendors')
+sys.path.append('/home/selecaoone/configs/tk-config-default2-respawn/vendors/rez-2.23.1-py2.7')
+from rezzurect.utils import rezzurect_config
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
 
@@ -157,7 +160,6 @@ class HoudiniLauncher(SoftwareLauncher):
         return supported_sw_versions
 
     def _find_software(self):
-
         # use the bundled engine icon
         icon_path = os.path.join(
             self.disk_location,
@@ -166,18 +168,11 @@ class HoudiniLauncher(SoftwareLauncher):
 
         self.logger.debug('Using icon path "%s".', icon_path)
 
-        # Use Rez to find installed Nuke versions
-        #
-        # TODO : Find a way to get the root config folder from here?
-        #        a way that is cleaner than running `dirname` over and over
-        #
-        dirname = os.path.dirname
-        current_dir = os.path.dirname(os.path.realpath(__file__))
-        config_root = dirname(dirname(dirname(dirname(current_dir))))
-
-        template = os.path.join(config_root, 'rez_packages', 'houdini', '{version}')
+        template = os.path.join(rezzurect_config.REZ_PACKAGE_ROOT_FOLDER, 'houdini', '{version}')
 
         self.logger.debug("Processing template %s.", template)
+
+        products = set(self.EXECUTABLE_TO_PRODUCT.values())
 
         for executable, tokens in self._glob_and_match(template, self.COMPONENT_REGEX_LOOKUP):
             self.logger.debug('Processing "%s" with tokens "%s".', executable, tokens)
@@ -186,7 +181,7 @@ class HoudiniLauncher(SoftwareLauncher):
             # not included)
             executable_version = tokens.get('version')
 
-            for product in ['Houdini', 'Houdini FX', 'Houdini Core']:
+            for product in products:
                 yield SoftwareVersion(
                     executable_version,
                     product,
