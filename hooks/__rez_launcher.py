@@ -122,7 +122,7 @@ def get_context(packages):
             'an administrator to fix this.'.format(packages=packages))
 
 
-def build_context_from_scratch(package, version, root, source_path):
+def build_context_from_scratch(package, version, root, source_path=''):
     '''Build the given `package` recursively.
 
     Note:
@@ -130,15 +130,30 @@ def build_context_from_scratch(package, version, root, source_path):
         "Partial" building is not supported and old files will be overwritten.
 
     Args:
-        package (str): The name of the Rez package to build.
-        version (str): The specific release of `package` to build.
-        root (str): The absolute path to where all Rez packages can be found.
-        source_path (str): The absolute path to where the package/version files exist.
+        package (str):
+            The name of the Rez package to build.
+        version (str):
+            The specific release of `package` to build.
+        root (str):
+            The absolute path to where all Rez packages can be found.
+        source_path (str, optional):
+            The absolute path to where the package.py file exists.
+            If no path is given, assume that the source_path can be found
+            under `root`. Default: "".
+
+    Raises:
+        ValueError: If `source_path` was not given and could not be found.
 
     '''
     from rezzurect.utils import rezzurect_config
     from rezzurect import manager
     from rez import config
+
+    if not source_path:
+        source_path = os.path.join(root, package, version)
+
+        if not os.path.isfile(os.path.join(source_path, 'package.py')):
+            raise ValueError('source_path could not be found.')
 
     # TODO : Using `config_package_root` may not work for deployment.
     #        Double-check this! TD117
@@ -147,7 +162,7 @@ def build_context_from_scratch(package, version, root, source_path):
 
     version_path = os.path.join(
         config_package_root,
-        package.name,
+        package,
         version,
     )
 
@@ -160,7 +175,7 @@ def build_context_from_scratch(package, version, root, source_path):
         os.makedirs(install_path)
 
     environment.init(source_path, install_path)
-    manager.install(package.name, root, config_package_root, version=version)
+    manager.install(package, root, config_package_root, version=version)
 
 
 def run_with_rez(package_name, version, runner, app_args):
@@ -208,7 +223,7 @@ def run_with_rez(package_name, version, runner, app_args):
     if not context:
         LOGGER.info('Package "%s" was not found. Attempting to build from scratch now.', packages)
         build_context_from_scratch(
-            package_module,
+            package_module.name,
             version,
             rezzurect_config.REZ_PACKAGE_ROOT_FOLDER,
             source_path,
