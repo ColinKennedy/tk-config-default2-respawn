@@ -13,8 +13,16 @@ import sys
 import sgtk
 import pprint
 
-sys.path.append('/home/selecaoone/configs/tk-config-default2-respawn/vendors')
-sys.path.append('/home/selecaoone/configs/tk-config-default2-respawn/vendors/rez-2.23.1-py2.7')
+# TODO : This code (and the sys.path.append) are terrible. Find out if there's
+# a hook that I can use to avoid haveing to add this block directly into the engine
+#
+DIR_ = os.path.dirname
+_CURRENT_DIR = DIR_(os.path.realpath(__file__))
+_CONFIGURATION_ROOT = DIR_(DIR_(DIR_(DIR_(_CURRENT_DIR))))
+
+sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors'))
+sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors', 'rez-2.23.1-py2.7'))
+
 from rezzurect.utils import rezzurect_config
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
