@@ -28,9 +28,6 @@ def _get_config_root_directory():
     return os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
 
-# TODO : Make it so that, if REZ_CONFIG_FILE is not defined, we define it
-#        but use it if it IS defined
-#
 def init_config():
     '''Get this Pipeline Configuration's Rez config file and add it.
 
@@ -39,49 +36,9 @@ def init_config():
         Make changes to this function only if you know what you're doing.
 
     '''
-    data = resolve_config_data(get_config_path())
-
-    with tempfile.NamedTemporaryFile(delete=False) as file_:
-        yaml.dump(data, file_)
-
-    os.environ['REZ_CONFIG_FILE'] = file_.name
+    os.environ['REZ_CONFIG_FILE'] = get_config_path()
 
 
 def get_config_path():
     '''str: Get the absolute path to this Pipeline Configuration's Rez config file.'''
     return os.path.join(_get_config_root_directory(), '.rezconfig')
-
-
-def resolve_config_data(path):
-    '''Use a base config file to create a "Pipeline-Configuration-aware" config.
-
-    Note:
-        Rez requires that the path to the .rezconfig file and all of the paths
-        listed in the .rezconfig file to be hardcoded. Normally that's fine but
-        Shotgun complicates this requirement because, depending on how you source
-        the Pipeline Configuration, it may actually be copied and installed to
-        the user folder.
-
-        Since there's no way to know beforehand which Shotgun sourcing method
-        is being used, we use a fake ".rezconfig" file as a template, fill in its
-        paths as absolute paths, and then source it instead.
-
-    Args:
-        path (str):
-            The absolute path to a rez config file.
-            The config file will presumably have one or more keys with
-            "{root}" in its value which need to be "resolved" into absolute paths.
-
-    Returns:
-        dict[str]: The resolved configuration settings.
-
-    '''
-    with open(path, 'r') as file_:
-        data = yaml.load(file_)
-
-    path = data['package_definition_python_path']
-    raw_path = path.format(root=_CURRENT_DIR)
-    normalized = os.path.normpath(raw_path)
-    data['package_definition_python_path'] = normalized
-
-    return data
