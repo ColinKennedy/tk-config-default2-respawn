@@ -20,7 +20,11 @@ DIR_ = os.path.dirname
 _CURRENT_DIR = DIR_(os.path.realpath(__file__))
 _CONFIGURATION_ROOT = DIR_(DIR_(DIR_(DIR_(_CURRENT_DIR))))
 
-sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors'))
+if os.getenv('REZZURECT_LOCATION'):
+    sys.path.insert(0, os.getenv('REZZURECT_LOCATION'))
+else:
+    sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors'))
+
 sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors', 'rez-2.23.1-py2.7'))
 from rezzurect.utils import rezzurect_config
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
