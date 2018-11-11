@@ -31,11 +31,19 @@ def _get_config_root_directory():
 def init_config():
     '''Get this Pipeline Configuration's Rez config file and add it.
 
+    If the user has a REZ_CONFIG_FILE already defined then prefer it over
+    this Configuration's .rezconfig file.
+
     Important:
         This is the linchpin that keeps Shotgun and Rez working together.
         Make changes to this function only if you know what you're doing.
 
     '''
+    config_file = os.getenv('REZ_CONFIG_FILE')
+
+    if config_file:
+        return
+
     os.environ['REZ_CONFIG_FILE'] = get_config_path()
 
 
