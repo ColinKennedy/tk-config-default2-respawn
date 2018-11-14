@@ -26,7 +26,7 @@ else:
     sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors'))
 
 sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors', 'rez-2.23.1-py2.7'))
-from rezzurect.utils import rezzurect_config
+from rezzurect.utils import config_helper
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
 
@@ -180,7 +180,7 @@ class HoudiniLauncher(SoftwareLauncher):
 
         self.logger.debug('Using icon path "%s".', icon_path)
 
-        template = os.path.join(rezzurect_config.REZ_PACKAGE_ROOT_FOLDER, 'houdini', '{version}')
+        template = os.path.join(config_helper.REZ_PACKAGE_ROOT, 'houdini', '{version}')
 
         self.logger.debug("Processing template %s.", template)
 

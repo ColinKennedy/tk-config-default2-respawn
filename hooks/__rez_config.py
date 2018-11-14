@@ -16,11 +16,11 @@ _VENDORS_PATH = os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors')
 sys.path.append(_VENDORS_PATH)
 sys.path.append(os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7'))
 
-from rezzurect.utils import rezzurect_config
+from rezzurect.utils import config_helper
 import yaml
 
 
-rezzurect_config.init_custom_pythonpath()
+config_helper.init_custom_pythonpath()
 
 
 def _get_config_root_directory():

@@ -27,7 +27,7 @@ else:
 
 sys.path.append(os.path.join(_CONFIGURATION_ROOT, 'vendors', 'rez-2.23.1-py2.7'))
 
-from rezzurect.utils import rezzurect_config
+from rezzurect import rez_config
 from sgtk.platform import SoftwareLauncher, SoftwareVersion, LaunchInformation
 
 
@@ -144,7 +144,7 @@ class NukeLauncher(SoftwareLauncher):
         :returns: Generator of :class:`SoftwareVersion`.
         """
         # Use Rez to find installed Nuke versions
-        template = os.path.join(rezzurect_config.REZ_PACKAGE_ROOT_FOLDER, 'nuke', '{version}')
+        template = os.path.join(rez_config.REZ_PACKAGE_ROOT, 'nuke', '{version}')
 
         self.logger.debug("Processing template %s.", template)
 
