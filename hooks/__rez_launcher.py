@@ -19,7 +19,9 @@ import sys
 import os
 
 # IMPORT THIRD-PARTY LIBRARIES
-from rezzurect.utils import rezzurect_config
+from rezzurect.utils import rezzurect_exceptions
+from rezzurect.utils import config_helper
+from rezzurect.utils import config
 from rezzurect import environment
 
 # TODO : Move rez package imports out of functions and up at the top, instead
@@ -145,7 +147,7 @@ def build_context_from_scratch(package, version, root, source_path=''):
         ValueError: If `source_path` was not given and could not be found.
 
     '''
-    from rezzurect.utils import rezzurect_config
+    from rezzurect.utils import config_helper
     from rezzurect import manager
     from rez import config
 
@@ -166,7 +168,7 @@ def build_context_from_scratch(package, version, root, source_path=''):
         version,
     )
 
-    install_path = os.path.join(version_path, rezzurect_config.INSTALL_FOLDER_NAME)
+    install_path = os.path.join(version_path, config_helper.INSTALL_FOLDER_NAME)
 
     # TODO : Running makedirs here is not be necessary for every package.
     #        Consider removing.
@@ -201,7 +203,7 @@ def run_with_rez(package_name, version, runner, app_args):
     add_rez_to_sys_path_if_needed(runner)
 
     source_path = os.path.join(
-        rezzurect_config.REZ_PACKAGE_ROOT_FOLDER,
+        config.REZ_PACKAGE_ROOT,
         package_name,
         version,
     )
@@ -220,12 +222,15 @@ def run_with_rez(package_name, version, runner, app_args):
 
     context = get_context(packages)
 
+    if not context and not config.AUTO_INSTALLS:
+        raise rezzurect_exceptions.ContextNotFound('No existing package could be found')
+
     if not context:
         LOGGER.info('Package "%s" was not found. Attempting to build from scratch now.', packages)
         build_context_from_scratch(
             package_module.name,
             version,
-            rezzurect_config.REZ_PACKAGE_ROOT_FOLDER,
+            config.REZ_PACKAGE_ROOT,
             source_path,
         )
         context = get_context(packages)

@@ -16,11 +16,11 @@ _VENDORS_PATH = os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors')
 sys.path.append(_VENDORS_PATH)
 sys.path.append(os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7'))
 
-from rezzurect.utils import rezzurect_config
+from rezzurect.utils import config_helper
 import yaml
 
 
-rezzurect_config.init_custom_pythonpath()
+config_helper.init_custom_pythonpath()
 
 
 def _get_config_root_directory():
@@ -31,11 +31,19 @@ def _get_config_root_directory():
 def init_config():
     '''Get this Pipeline Configuration's Rez config file and add it.
 
+    If the user has a REZ_CONFIG_FILE already defined then prefer it over
+    this Configuration's .rezconfig file.
+
     Important:
         This is the linchpin that keeps Shotgun and Rez working together.
         Make changes to this function only if you know what you're doing.
 
     '''
+    config_file = os.getenv('REZ_CONFIG_FILE')
+
+    if config_file:
+        return
+
     os.environ['REZ_CONFIG_FILE'] = get_config_path()
 
 
