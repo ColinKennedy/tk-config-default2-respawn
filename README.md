@@ -151,11 +151,14 @@ This will hopefully be fixed in the future.
 
 
 # Road Map
-0.8.0
-- Add Maya support
+0.9.0
+- Add Maya-Windows support
 - Add Houdini-Windows support
 
-0.9.0
+0.10.0
  - In particular - Recursive deployment of a package should be a "one-button" solution
  - Make a tool (probably a CLI) that can recursively release a package unless
    this can be done with Rez out-of-box
+
+Extras
+- Add Maya-Linux license support
