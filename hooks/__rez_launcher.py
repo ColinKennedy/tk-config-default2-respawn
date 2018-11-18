@@ -205,8 +205,10 @@ def run_with_rez(package_name, version, runner, app_args):
     source_path = os.path.join(
         config.REZ_PACKAGE_ROOT,
         package_name,
-        version,
     )
+
+    if version:
+        source_path = os.path.join(source_path, version)
 
     if not os.path.isdir(source_path):
         raise RuntimeError('Path "{source_path}" could not be found.'.format(source_path=source_path))
