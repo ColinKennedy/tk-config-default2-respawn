@@ -5,6 +5,7 @@
 
 # IMPORT STANDARD LIBRARIES
 import tempfile
+import glob
 import sys
 import os
 
@@ -15,6 +16,16 @@ _VENDORS_PATH = os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors')
 # This sys.path.append adds `rezzurect` and any other third-party library that we need
 sys.path.append(_VENDORS_PATH)
 sys.path.append(os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7'))
+# TODO : Ask Shotgun Support for a better way to find this path
+sys.path.append(
+    sorted(glob.glob(os.path.join(os.path.expanduser('~'),
+     '.shotgun',
+     'bundle_cache',
+     'app_store',
+     'tk-core',
+     'v*',
+     'python')))[-1]
+)
 
 from rezzurect.utils import config_helper
 import yaml
