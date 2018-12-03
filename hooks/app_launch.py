@@ -56,10 +56,7 @@ class AppLaunch(tank.Hook):
         """
         rez_config.init_config()
 
-        try:
-            package = ENGINES_TO_PACKAGE[engine_name]
-        except KeyError:
-            package = None
+        package = ENGINES_TO_PACKAGE.get(engine_name)
 
         runner = rez_runner.get_runner(platform.system())
 
