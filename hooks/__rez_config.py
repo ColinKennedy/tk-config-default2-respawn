@@ -4,7 +4,7 @@
 '''A module that helps bootstrap Rez onto Shotgun's Pipeline Configuration.'''
 
 # IMPORT STANDARD LIBRARIES
-import tempfile
+import platform
 import glob
 import sys
 import os
@@ -17,9 +17,16 @@ _VENDORS_PATH = os.path.join(_SHOTGUN_CONFIG_ROOT, 'vendors')
 sys.path.append(_VENDORS_PATH)
 sys.path.append(os.path.join(_VENDORS_PATH, 'rez-2.23.1-py2.7'))
 # TODO : Ask Shotgun Support for a better way to find this path
+if platform.system() == 'Windows':
+    _ROOT = os.path.join(os.path.expanduser('~'), 'AppData', 'Roaming', 'Shotgun')
+elif platform.system() == 'Linux':
+    _ROOT = os.path.join(os.path.expanduser('~'), '.shotgun')
+else:
+    raise NotImplementedError('Need the mac root folder, here')
+
 sys.path.append(
-    sorted(glob.glob(os.path.join(os.path.expanduser('~'),
-     '.shotgun',
+    sorted(glob.glob(os.path.join(
+     _ROOT,
      'bundle_cache',
      'app_store',
      'tk-core',
